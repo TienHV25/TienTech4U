@@ -1,0 +1,101 @@
+#User data request:
+
+POST http://localhost:3001/api/user/sign-up
+Content-Type: application/json
+
+{
+    "email":"NnaHan@gmail.com",
+    "password": "123",
+    "confirmPassword": "123"
+}
+
+###
+
+POST http://localhost:3001/api/user/sign-in
+Content-Type: application/json
+
+{
+    "email":"abc@tpf.com",
+    "password": "123"
+}
+
+###
+
+PUT http://localhost:3001/api/user/update-user/67d6fc97017a659b7e147c91
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDZmYzk3MDE3YTY1OWI3ZTE0N2M5MSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3NDIxNDM2ODgsImV4cCI6MTc0MjE0NzI4OH0.bnMpCy5c4e4_1mJneqJ__ojXB1xjbZLQ0_xO0JP8kMY
+
+{
+    "email":"ienHV99@tpf.com",
+    "isAdmin": "true"
+}
+
+###
+
+DELETE http://localhost:3001/api/user/delete-user/67628e822333ee0467dcb355
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNjc2MjhlODIyMzMzZWUwNDY3ZGNiMzU1IiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE3MzQ1ODAzNDQsImV4cCI6MTczNDU4Mzk0NH0.HVUkS6AEfVkRB9N9WWFxD1q_6esnqyLwdlMOu7F1BqM
+
+###
+
+GET http://localhost:3001/api/user/get-user-detail/677cb2a907aa7f53e8703905
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2NiMmE5MDdhYTdmNTNlODcwMzkwNSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MzYyMzMxOTEsImV4cCI6MTczNjIzNjc5MX0.glqO4k14grNWFL21OBdItVq12aUhXnhdQBfTYZcR_d8
+
+###
+
+GET http://localhost:3001/api/user/get-user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNjc2MjhlODIyMzMzZWUwNDY3ZGNiMzU1IiwiaXNBZG1pbiI6dHJ1ZX0sImlhdCI6MTczNDkzMDExOSwiZXhwIjoxNzM0OTMzNzE5fQ.FDzs5t25XPo7rNQL5NX5e5gF06zFqUGSJgFYYA59h4k
+
+###
+POST http://localhost:3001/api/user/refresh-token
+Content-Type: application/json
+Cookie: refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2NiMmE5MDdhYTdmNTNlODcwMzkwNSIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MzYzMjQ1NzEsImV4cCI6MTc2Nzg2MDU3MX0.7gi7xiuT2-npZxPMlpP7LgS2TCZ0ka2s-Y5zMmUqKI0
+
+
+#Product data request:
+
+###
+POST http://localhost:3001/api/product/create-product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNjc2MjhlODIyMzMzZWUwNDY3ZGNiMzU1IiwiaXNBZG1pbiI6dHJ1ZX0sImlhdCI6MTczNDkzNjE5NiwiZXhwIjoxNzM0OTM5Nzk2fQ.LMEs_dE7MkfGRXZDxGmDbbQSUTpVoXC-NooOw5Zblng
+
+{
+    "name": "Galaxy A50",
+    "image":"link-image",
+    "type": "mobile",
+    "price":98000000,
+    "countInStock":23,
+    "rating":51,
+    "description":"xyz"
+}
+
+###
+GET http://localhost:3001/api/product/get-product-all/?limit=2&page=0
+Content-Type: application/json
+
+###
+GET http://localhost:3001/api/product/get-product-detail/67642696ba09357d698ed18e
+Content-Type: application/json
+
+###
+PUT http://localhost:3001/api/product/update-product/67642696ba09357d698ed18e
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNjc2MjhlODIyMzMzZWUwNDY3ZGNiMzU1IiwiaXNBZG1pbiI6dHJ1ZX0sImlhdCI6MTczNDYyMDY5MywiZXhwIjoxNzM0NjI0MjkzfQ.G55iL88WvcbLgw77I_I328329t_fWPn-OTrYaMJ3eSg
+
+{
+    "countInStock":999,
+    "description":"test"
+}
+
+###
+DELETE http://localhost:3001/api/product/delete-product/67642696ba09357d698ed18e
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiNjc2MjhlODIyMzMzZWUwNDY3ZGNiMzU1IiwiaXNBZG1pbiI6dHJ1ZX0sImlhdCI6MTczNDYyMDY5MywiZXhwIjoxNzM0NjI0MjkzfQ.G55iL88WvcbLgw77I_I328329t_fWPn-OTrYaMJ3eSg
+
+
+
+
+
+
