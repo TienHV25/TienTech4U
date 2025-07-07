@@ -18,7 +18,7 @@ root.render(
       <Provider store={store}>
         <App />
       </Provider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} toggleButtonStyle={{ display: 'none' }} />
     </QueryClientProvider>
     
  // </React.StrictMode>

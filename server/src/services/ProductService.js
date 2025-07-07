@@ -51,7 +51,7 @@ const getProductAll = async (limit,page,sort,filter) => {
         }
         if (filter) {
             const label = filter[0]
-            const filterCondition = {[label]: { '$regex': filter[1]}}
+            const filterCondition = {[label]: { '$regex': filter[1],'$options': 'i' }}
             const productFilter = await Product.find(filterCondition).limit(limit).skip(page * limit)
             if(productFilter) {
                 const totalProductAfterFilter = await Product.countDocuments(filterCondition)
@@ -163,6 +163,27 @@ const deleteProduct = async (productID,data) => {
     }
 }
 
+const deleteProductMany = async (ids) => {
+   try {    
+        const deleteProductMany = await Product.deleteMany(
+            {
+             _id: ids
+            }
+        )
+        if(!deleteProductMany ) {
+            return {
+                status: 'ERR',
+                message: 'Failed to delete products'
+            }
+            }
+        return {
+            status: 'OK',
+            message: 'Products delete successfully'
+        }
+    } catch (e) {
+        throw e 
+    }
+}
 
-module.exports = {createProduct,getProductAll,getProductDetail,updateProduct,deleteProduct}
+module.exports = {createProduct,getProductAll,getProductDetail,updateProduct,deleteProduct,deleteProductMany}
 

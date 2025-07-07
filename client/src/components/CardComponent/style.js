@@ -6,6 +6,7 @@ export const WrapperCardStyled = styled(Card)`
     & img {
       height: 200px;
       width: 200px;
+      margin-top : 15px;
     }
     .ant-card-body {
     padding: 16px; 
@@ -13,7 +14,7 @@ export const WrapperCardStyled = styled(Card)`
 `
 export const StyleNameProduct = styled.div`
     font-weight: 400;
-    font-size:12px;
+    font-size:14px;
     line-height:3px;
     color: rgb(56,56,61);
     padding:0;

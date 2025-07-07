@@ -185,5 +185,26 @@ const getUserAll = async () => {
     }
 }
 
+const deleteUserMany = async (ids) => {
+   try {      
+        const deleteUserMany = await User.deleteMany(
+             {
+             _id: ids
+            }
+        )
+        if(!deleteUserMany ) {
+            return {
+                status: 'ERR',
+                message: 'Failed to delete users'
+            }
+            }
+        return {
+            status: 'OK',
+            message: 'Users delete successfully'
+        }
+    } catch (e) {
+        throw e 
+    }
+}
 
-module.exports = {createUser,loginUser,updateUser,deleteUser,getUserDetail,getUserAll}
+module.exports = {createUser,loginUser,updateUser,deleteUser,getUserDetail,getUserAll,deleteUserMany}

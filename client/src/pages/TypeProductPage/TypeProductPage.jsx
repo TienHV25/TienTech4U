@@ -14,12 +14,12 @@ const TypeProductPage = () => {
       </Col>
       <Col span={20} style={{display:'flex',alignItems:'center',gap:'20px',flexWrap:'wrap'}}>
         <CardComponent />
+        {/* <CardComponent />
         <CardComponent />
         <CardComponent />
         <CardComponent />
         <CardComponent />
-        <CardComponent />
-        <CardComponent />
+        <CardComponent /> */}
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '5px'  }}>
             <Pagination
                 showQuickJumper

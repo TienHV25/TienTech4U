@@ -12,4 +12,7 @@ router.get('/get-user-detail/:id',authMiddleWare({requireAdmin: false}),UserCont
 router.get('/get-user',UserController.getUserAll)
 router.post('/refresh-token',UserController.refreshToken)
 
+router.post('/delete-many',UserController.deleteMany)
+
+
 module.exports = router

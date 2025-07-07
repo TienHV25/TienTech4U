@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import * as UserService from '../../services/UserService'
 import { resetUser } from '../../redux/slides/userSlide'
 import {useDispatch} from "react-redux"
+import {searchProduct} from "../../redux/slides/productSlide"
 import LoadingComponent from '../LoadingComponent/LoadingComponent';
 
 
@@ -18,6 +19,7 @@ const HeaderComponent = () => {
   const user = useSelector((state) => state.user)
   const [loading,setLoading ] = useState(false)
   const [userAvatar,setUserAvatar] = useState('')
+  const [search,setSearch] = useState('')
   const handleNavigateLogin = () => {
       navigate('/sign-in')
   }
@@ -54,21 +56,24 @@ const HeaderComponent = () => {
   const handleNavigateHome = () => {
     navigate('/')
   }
-
+  const onSearch = (e) =>{
+    setSearch(e.target.value)
+    dispatch(searchProduct(e.target.value))
+  }
   return (
-    <div>
      <WrapperHeader>
        <Col span={4}>
-         <WrapperTextHeader>
-           Tiến Tech4U
+         <WrapperTextHeader onClick={handleNavigateHome}>
+           <span style={{cursor: 'pointer'}}>Tiến Tech4U</span>
          </WrapperTextHeader>
        </Col>
        <Col span={12} >
          <Search
           placeholder="Nhập thông tin cần tìm"
           allowClear
-          enterButton="Tìm Kiếm"
+          // enterButton="Tìm Kiếm"
           size="large"
+          onChange={onSearch}
          />
        </Col>
        <Col span={8} style={{display:'flex',gap:'20px'}}>
@@ -127,7 +132,6 @@ const HeaderComponent = () => {
          
        </Col>
      </WrapperHeader>
-    </div>
   )
 }
 

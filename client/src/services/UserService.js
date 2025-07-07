@@ -121,3 +121,15 @@ export const deleteUser = async (id,access_token) => {
         throw error
     }
 }
+
+export const deleteUserMany = async (id) => {
+    try {
+        const res = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/user/delete-many`,id )
+        return res.data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            return error.response.data
+        }
+        throw error
+    }
+}

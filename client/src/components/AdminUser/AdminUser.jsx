@@ -16,6 +16,7 @@ import { jwtDecode } from 'jwt-decode'
 const AdminUser = () => {
     const [isModalOpen,setIsModalOpen] = useState(false)
     const [form] = Form.useForm()
+    const [detailForm] = Form.useForm();
     const [rowSelected,setRowSelected] = useState('')
     const [isOpenDraw,setIsOpenDraw] = useState(false)
     const [isEditMode, setIsEditMode] = useState('')
@@ -70,8 +71,8 @@ const AdminUser = () => {
     }
   
     useEffect(() => {
-        form.setFieldsValue(stateUserDetail)
-      },[form,stateUserDetail])
+        detailForm.setFieldsValue(stateUserDetail)
+      },[detailForm,stateUserDetail])
   
     const { refetch: refetchUsers } = useQuery({
       queryKey: ['users'],
@@ -80,8 +81,8 @@ const AdminUser = () => {
     
      const mutation = useMutationHook(
       (data) => {
-        const { email, password, confirmPassword } = data;
-        return UserService.signupUser({ email, password, confirmPassword })
+        const { email, password, confirmPassword,phone,address } = data;
+        return UserService.signupUser({ email, password, confirmPassword,phone,address })
       },
       {
         onSuccess: () => {
@@ -141,13 +142,27 @@ const AdminUser = () => {
     }
     }
 
+    const mutationDeleteMany = useMutationHook((id) => UserService.deleteUserMany(id))
+
+    const handleDeleteUserMany = async (id) => {
+        if (id) {
+          const res = await mutationDeleteMany.mutateAsync(id)
+          if (res.status === 'OK') {
+            message.success('Xóa người dùng thành công!')
+            refetchUsers()
+          } else {
+            message.error('Xóa người dùng thất bại!')
+          }
+        }
+      }
+    
+
     const  handleDetailUser = () => {
       if(rowSelected)
       {
         fetchGetDetailUser()
       }
       setIsOpenDraw(true)
-      setIsPendingDetail(true)
     }
   
     const showDeleteConfirm = (id) => {
@@ -156,23 +171,16 @@ const AdminUser = () => {
     }
 
     useEffect(() => {
-      if(rowSelected && isEditMode === 'true') {
-        handleDetailUser()
+      if (rowSelected) {
+        if (isEditMode === 'true') {
+          setIsPendingDetail(true)
+          fetchGetDetailUser().finally(() => setIsPendingDetail(false))
+          setIsOpenDraw(true)
+        } else if (isEditMode === 'false') {
+          showDeleteConfirm(rowSelected)
+        }
       }
-      },[rowSelected])
-
-    useEffect(() => {
-      if (rowSelected && isEditMode === 'false') {
-        showDeleteConfirm(rowSelected)
-      }
-    }, [rowSelected])
-
-    useEffect(() => {
-      if (rowSelected && isEditMode === "true") {
-        setIsPendingDetail(true)
-        fetchGetDetailUser().finally(() => setIsPendingDetail(false))
-      }
-    }, [rowSelected])
+    }, [rowSelected, isEditMode])
 
     const renderAction = () => {
       return (
@@ -295,6 +303,12 @@ const AdminUser = () => {
       
       },
       {
+        title: 'Địa chỉ',
+        dataIndex: 'address',
+        ...getColumnSearchProps('phone')
+      
+      },
+      {
         title: 'Xóa/Sửa',
         dataIndex: 'action',
         render: renderAction,
@@ -373,7 +387,8 @@ const AdminUser = () => {
         address: '',
         password: '',
         confirmPassword: '',
-        avatar: ''
+        avatar: '',
+        fileList: [],
       })
       setIsOpenDraw(false)
     }
@@ -393,7 +408,7 @@ const AdminUser = () => {
           <PlusOutlined style={{fontSize:'40px'}} />
        </Button>
        <div style={{marginTop:'35px'}}>
-      <TableComponent columns={columns} data={dataTable} isPending={isPendingUsers}  onRow={(record) => {
+      <TableComponent columns={columns} data={dataTable} isPending={isPendingUsers} handleDeleteUserMany={handleDeleteUserMany}  onRow={(record) => {
         return {
           onClick: () => {
             setRowSelected(record._id)
@@ -467,7 +482,7 @@ const AdminUser = () => {
         </Form>
        </LoadingComponent>
       </Modal>
-      <DrawerComponent title ='Chi tiết người dùng' isOpen = {isOpenDraw} onClose = {handleOnCLose} width='50%'>
+      <DrawerComponent title ='Chi tiết người dùng' isOpen = {isOpenDraw} onClose = {handleOnCLose} width='50%' forceRender>
         <LoadingComponent isPending={isPendingDetail}>
         <Form
             name="basics"
@@ -481,7 +496,7 @@ const AdminUser = () => {
               maxWidth: 600,
             }}
             onFinish={onUpdateUser}
-            form={form}
+            form={detailForm}
             autoComplete="off"
           >
             <Form.Item

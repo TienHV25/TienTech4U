@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect,  useState } from 'react'
 import TypeProducts from '../../components/TypeProducts/TypeProducts'
-import { WrapperButtonMore, WrapperTypeProduct } from './style'
+import { WrapperButtonMore, WrapperTypeProduct ,WrapperButtonEnd} from './style'
 import SliderComponent from '../../components/SliderComponent/SliderComponent'
 import slider1 from '../../assets/images/slider1.webp'
 import slider2 from '../../assets/images/slider2.webp'
@@ -12,26 +12,43 @@ import CardComponent from '../../components/CardComponent/CardComponent'
 import { useQuery } from "@tanstack/react-query"
 import * as ProductService from '../../services/ProductService'
 import FooterComponent from '../../components/FooterComponent/FooterComponent'
+import { useSelector } from 'react-redux'
+import { useDebounce } from '../../hooks/useDebounce'
+// import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 
 
 const HomePage = () => {
+  const searchProduct = useSelector((state) => state.product.search)
+  const seaerchDebounce = useDebounce(searchProduct,1000)
+  const [stateProducts,setStateProducts] = useState([])
+  const [limit,setLimit] = useState(12)
+
   const arr = ['TV','Tủ Lạnh','Lap Top','Điện Gia Dụng','Thời Trang Nam','Thời Trang Nữ',
     'Nội Thất','Đồ Chơi','Giày Dép','Điện Lạnh','Điện Tử','Máy Ảnh','ĐTDĐ','Đồng Hồ','Trang Sức','Balo','Xe Máy','Sách']
   
-  const fetchProductAll = async () => {
-    const res = await ProductService.getAllProducts()
-    console.log('res',res)
+  const fetchProductAll = async (context) => {
+    const limit = context?.queryKey && context?.queryKey[1]
+    const search = context?.queryKey && context?.queryKey[2]
+    const res = await ProductService.getAllProducts(search,limit)
+    setStateProducts(res?.data)
     return res
   }
 
-  const { isPending, data: products } = useQuery({
-    queryKey: ['products'],
+  const { data: products } = useQuery({
+    queryKey: ['products',limit,seaerchDebounce],
     queryFn: fetchProductAll,
     retry:3,
-    retryDelay: 1000
+    retryDelay: 1000,
+    keepPreviousData: true
   })
-
-  console.log('data',products)
+  
+  useEffect(() => {
+    if(products?.data?.length > 0 && searchProduct.length === 0) {
+      setStateProducts(products?.data)
+    }
+  },[products])
+  
+  console.log(products)
   return (
  <>
   <div  style={{padding:'0 120px'}}>
@@ -43,10 +60,10 @@ const HomePage = () => {
         })}            
     </WrapperTypeProduct> 
   </div>
-  <div style={{backgroundColor:'#efefef',padding:'0 120px',height:'1000px'}}>   
+  <div style={{backgroundColor:'#efefef',padding:'0 120px'}}>   
    <SliderComponent arrImages1={[slider1,slider2,slider3]} arrImages2={[slider4,slider5,slider6]} /> 
-   <div style={{marginTop:'35px',display:'flex',justifyContent:'center',gap:'15px',flexWrap:'wrap'}}>
-     {products?.data?.map((product,index) => 
+   <div style={{marginTop:'35px',display:'flex',gap:'15px',flexWrap:'wrap'}}>
+     {stateProducts?.map((product,index) => 
        {
          return (
           <CardComponent 
@@ -66,10 +83,18 @@ const HomePage = () => {
      )}
    </div>
    <div style={{ textAlign:'center'}}>
-       < WrapperButtonMore textButton="Xem thêm" type="outline"
-         styleButton={{marginTop:'20px',border:'1px solid rgb(11,116,229)',
+       {products?.totalProduct !== products?.data?.length ?
+       <WrapperButtonMore textButton="Xem thêm" type="outline"
+         styleButton={{marginTop:'20px',marginBottom:'20px',border:'1px solid',
          fontWeight:'500',fontSize:'16px',width:'240px',height:'38px',
-         color:'rgb(11,116,229)'}}  /> 
+         color:'rgb(11,116,229)'}}
+         onClick = {() => setLimit((prev) => prev + 6 )}  /> :
+         <WrapperButtonEnd textButton="Hết sản phẩm" type="outline"
+         styleButton={{marginTop:'20px',marginBottom:'20px',border:'1px solid',
+         fontWeight:'500',fontSize:'16px',width:'240px',height:'38px',
+         color:'grey'}}
+          />
+          }
    </div>
   </div>
   <div>

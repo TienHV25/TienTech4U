@@ -5,21 +5,31 @@ import ProductImage from '../../assets/images/product.webp'
 
 const CardComponent = (props) => {
   const {countInStock,description,image,name,price,rating,type,selled,discount} = props
+
+  const calcDiscount = (countInStock) => {
+    if (countInStock > 1000) return 30;
+    if (countInStock > 500) return 20;
+    if (countInStock > 100) return 10;
+    if (countInStock > 10) return 5;
+    return 0;
+  }
+
   return (
   <WrapperCardStyled
     hoverable
-    style={{ width: 200}}
-    cover={<img alt="example" src={ProductImage} />}
+    style={{ width: 210}}
+    cover={<img alt="example" src={image} />}
     >
     <StyleNameProduct>{name}</StyleNameProduct>
     <WrapperReportText> 
-      <span style={{marginRight:'4px'}}><span>{rating}</span><StarFilled style={{fontSize:'12px',color:'yellow',fontWeight:'bold'}}/></span>
-      <span>| Đã bán {selled || 1000} +</span>
+      <span style={{marginRight:'4px',fontSize:'12px'}}><span >{rating}</span>
+      <StarFilled style={{fontSize:'12px',color:'#FFC107',fontWeight:'bold'}}/></span>
+      <span style={{fontWeight:'600',fontSize:"12px"}}>| Đã bán {selled || 1000} +</span>
     </WrapperReportText>
     <WrapperPriceText>
-      {price}đ
+      {price.toLocaleString('vi-VN')}đ
       <WrapperDiscountText>
-        {discount || 5}%
+       -{discount || calcDiscount(countInStock)}%
       </WrapperDiscountText>
     </WrapperPriceText>
 

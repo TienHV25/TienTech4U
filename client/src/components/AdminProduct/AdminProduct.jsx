@@ -16,6 +16,7 @@ import DrawerComponent from '../DrawerComponent/DrawerComponent'
 const AdminProduct = () => {
   const [isModalOpen,setIsModalOpen] = useState(false)
   const [form] = Form.useForm()
+  const [detailForm] = Form.useForm();
   const [rowSelected,setRowSelected] = useState('')
   const [isOpenDraw,setIsOpenDraw] = useState(false)
   const [isEditMode, setIsEditMode] = useState('')
@@ -41,20 +42,12 @@ const AdminProduct = () => {
     rating: '',
     image: ''
  })
-  const mutation = useMutationHook(
-    (data) => {
-      const {name,type,countInStock,price,description,rating,image} = data
-      const res = ProductService.createProducts({name,type,countInStock,price,description,rating,image})
-    return res
-  }  
-  )
+
 
   const getAllProduct = async() => {
       const res = await ProductService.getAllProducts()
       return res
   }
-  
-  const {data,isPending,isSuccess,isError} = mutation
   
   const { isPending: isPendingProducts, data: products } = useQuery({
     queryKey: ['products'],
@@ -83,8 +76,8 @@ const AdminProduct = () => {
     },[rowSelected])
   
   useEffect(() => {
-      form.setFieldsValue(stateProductDetail)
-    },[form,stateProductDetail])
+      detailForm.setFieldsValue(stateProductDetail)
+    },[detailForm,stateProductDetail])
 
   const handleDetailProduct = () => {
       if(rowSelected) {
@@ -97,6 +90,24 @@ const AdminProduct = () => {
     queryKey: ['products'],
     queryFn: getAllProduct,
    })
+
+  const mutation = useMutationHook(
+    (data) => {
+      const {name,type,countInStock,price,description,rating,image} = data
+      return ProductService.createProducts({name,type,countInStock,price,description,rating,image})
+       },
+      {
+        onSuccess: () => {
+          message.success('Tạo sản phẩm thành công!')
+          refetchProducts()
+        },
+        onError: () => {
+          message.error('Tạo thất bại!');
+        }
+      }
+  )
+
+  const {data,isPending,isSuccess,isError} = mutation
 
   const updateMutation = useMutationHook(
     ({ id, data }) => ProductService.updateProduct(id, data),
@@ -118,6 +129,8 @@ const AdminProduct = () => {
 
   const mutationDelete = useMutationHook((id) => ProductService.deleteProduct(id))
 
+  const mutationDeleteMany = useMutationHook((id) => ProductService.deleteProductMany(id))
+
   const handleDeleteProduct = async () => {
     if (productToDelete) {
       const res = await mutationDelete.mutateAsync(productToDelete)
@@ -129,6 +142,18 @@ const AdminProduct = () => {
       }
       setIsDeleteModalOpen(false)
       setProductToDelete(null)
+    }
+  }
+
+  const handleDeleteProductMany = async (id) => {
+    if (id) {
+      const res = await mutationDeleteMany.mutateAsync(id)
+      if (res.status === 'OK') {
+        message.success('Xóa sản phẩm thành công!')
+        refetchProducts()
+      } else {
+        message.error('Xóa sản phẩm thất bại!')
+      }
     }
   }
 
@@ -160,7 +185,7 @@ const AdminProduct = () => {
                   handleDetailProduct()
                   setIsEditMode('true')
                   }}/>
-              </div>
+      </div>
     )
   }
 
@@ -301,7 +326,6 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if(isSuccess && data?.status === 'OK') {
-      message.success()
       handleCancel()
     } else if (isError) {
       message.error()
@@ -393,16 +417,17 @@ const AdminProduct = () => {
   const onFinish = () => {
     mutation.mutate(stateProduct)
   }
+
   return (
     <div>
     <WrapperHeader>
        Quản lý sản phẩm
     </WrapperHeader>
-    <Button style={{width:'150px',height:'150px',borderRadius:'6px',borderStyle:'dashed'}} onClick={() =>  setIsModalOpen(true)}>
+    <Button style={{width:'150px',height:'150px',borderRadius:'6px #F7C948',borderStyle:'dashed'}} onClick={() => setIsModalOpen(true)}>
        <PlusOutlined style={{fontSize:'40px'}} />
     </Button>
     <div style={{marginTop:'35px'}}>
-      <TableComponent columns={columns} data={dataTable} isPending={isPendingProducts}  onRow={(record) => {
+      <TableComponent columns={columns} data={dataTable} isPending={isPendingProducts}  handleDeleteProductMany={handleDeleteProductMany}  onRow={(record) => {
         return {
           onClick: () => {
             setRowSelected(record._id)
@@ -541,7 +566,7 @@ const AdminProduct = () => {
         </Form>
        </LoadingComponent>
       </Modal>
-      <DrawerComponent title ='Chi tiết sản phẩm' isOpen = {isOpenDraw} onClose = {handleOnCLose} width='50%'>
+      <DrawerComponent title ='Chi tiết sản phẩm' isOpen = {isOpenDraw} onClose = {handleOnCLose} width='50%' forceRender>
         <LoadingComponent isPending={isPending}>
         <Form
             name="update"
@@ -555,7 +580,7 @@ const AdminProduct = () => {
               maxWidth: 600,
             }}
             onFinish={onUpdateProduct}
-            form={form}
+            form={detailForm}
             autoComplete="off"
           >
             <Form.Item

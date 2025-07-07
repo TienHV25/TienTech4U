@@ -14,6 +14,7 @@ export const WrapperTextHeader = styled.span `
    font-weight:bold;
    text-align:center;
    margin-left:50px;
+   cursor:poiter;
   
 `
 export const WrapperAccountHeader = styled.div `
@@ -26,7 +27,6 @@ export const WrapperAccountHeader = styled.div `
 export const WrapperIconText = styled.div`
    display: flex;
    align-items: center;
-   cursor: pointer;
 `
 
 export const WrapperTextHeaderSmall = styled.span `

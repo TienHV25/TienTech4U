@@ -6,6 +6,7 @@ export const WrapperHeader = styled.h1`
   color: #000;
   font-size: 18px;
   margin: 10px 0;
+  text-align: center;
 `
 
 export const WrapperContentProfile = styled.div`

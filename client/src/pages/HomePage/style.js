@@ -7,6 +7,7 @@ export const WrapperTypeProduct = styled.div`
    gap:16px;
    justify-content: flex-start;
    height:44px;
+   backgroud: #fafafa;
 `
 
 export const WrapperButtonMore = styled(ButtonComponent)`
@@ -18,4 +19,12 @@ export const WrapperButtonMore = styled(ButtonComponent)`
      }
    }
 `
+
+export const WrapperButtonEnd = styled(ButtonComponent)`
+   &:hover {
+     cursor: not-allowed
+   }
+`
+
+  
   

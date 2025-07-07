@@ -143,4 +143,21 @@ const logoutUser = async (req, res) => {
         return res.status(401).json({ message: e})
     }
 }
-module.exports = {createUser,loginUser,updateUser,deleteUser,getUserDetail,getUserAll,refreshToken,logoutUser}
+
+const deleteMany = async(req,res) => {
+    try {
+        const ids = req.body
+        if (!ids) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The ids is required'
+            })
+        }
+        const userDeleteMany =  await UserService.deleteUserMany(ids)
+        return res.status(200).json(userDeleteMany)
+    } catch (e) {
+        return res.status(500).json({message:e})
+    }
+}
+
+module.exports = {createUser,loginUser,updateUser,deleteUser,getUserDetail,getUserAll,refreshToken,logoutUser,deleteMany}
