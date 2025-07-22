@@ -1,6 +1,7 @@
 import { Button, Col, Image } from "antd";
 import styled from "styled-components";
 
+
 export const WrapperStyleColImage = styled(Col)`
     flex-basis: unset;
     display: flex;
@@ -9,7 +10,9 @@ export const WrapperStyleColImage = styled(Col)`
 export const WrapperStyleImageSmall = styled(Image)`
     border:1px solid rgba(0, 0, 0, 0.1);
     border-radius:5px;
-    border: ${(props) => (props.check ? "2px solid rgb(11, 116, 229)" : "1px solid rgba(0, 0, 0, 0.1)")};
+    border: 2px solid
+    ${({ $isSelected }) =>
+      $isSelected ? 'rgb(11, 116, 229)' : 'rgba(0, 0, 0, 0.1)'};
     cursor: pointer;
 `
 export const WrapperInforProduct = styled.div`
@@ -71,7 +74,7 @@ export const WrapperChangeAdress = styled.span`
     align-items: center;
     cursor: pointer;
     gap: 4px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 400;
     line-height: 150%;
     margin-top:10px;

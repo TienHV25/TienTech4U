@@ -30,3 +30,20 @@ export const getLevelKeys = (items1) => {
     func(items1)
     return key
     }
+
+export const renderOptions = (arr) => {
+    let results = [] 
+    if(arr){
+        results = arr?.map((opt) => {
+            return{
+                value: opt,
+                label: opt
+            }
+        })
+    }
+    results.push({
+        label: 'Thêm Type',
+        value: 'add_type'
+    })
+    return results
+}

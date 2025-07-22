@@ -8,7 +8,8 @@ router.get('/get-product-all',ProductController.getProductAll)
 router.get('/get-product-detail/:id',ProductController.getProductDetail)
 router.put('/update-product/:id',ProductController.updateProduct)
 router.delete('/delete-product/:id',ProductController.deleteProduct)
-
 router.post('/delete-many',ProductController.deleteMany)
+router.get('/get-all-type',ProductController.getAllType)
+
 
 module.exports = router

@@ -185,5 +185,24 @@ const deleteProductMany = async (ids) => {
     }
 }
 
-module.exports = {createProduct,getProductAll,getProductDetail,updateProduct,deleteProduct,deleteProductMany}
+const getAllType = async () => {
+    try {
+        const allType = await Product.distinct('type')
+        if (!allType) {
+            return {
+                status: 'ERR',
+                message: 'Type not exists'
+            }
+        }
+        return {
+            status: 'OK',
+            message: 'Get all type successfully',
+            data: allType
+        }
+    } catch (e) {
+        throw e 
+    }
+}
+
+module.exports = {createProduct,getProductAll,getProductDetail,updateProduct,deleteProduct,deleteProductMany,getAllType}
 

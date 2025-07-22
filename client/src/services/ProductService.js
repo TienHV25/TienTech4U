@@ -17,6 +17,21 @@ export const getAllProducts = async (search,limit) => {
     }
 }
 
+export const getAllProductsType = async (type) => {
+    try {
+        if(type) {
+          const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/product/get-product-all?filter=type&filter=${type}`)
+          return res.data
+        }
+        
+    } catch (error) {
+        if (error.response && error.response.data) {
+            return error.response.data
+        }
+        throw error
+    }
+}
+
 export const createProducts = async (data) => {
     try {
         const res = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/product/create-product`,data)
@@ -69,6 +84,18 @@ export const deleteProduct = async (id) => {
 export const deleteProductMany = async (id) => {
     try {
         const res = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/product/delete-many`,id )
+        return res.data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            return error.response.data
+        }
+        throw error
+    }
+}
+
+export const getAllType = async () => {
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/product/get-all-type`)
         return res.data
     } catch (error) {
         if (error.response && error.response.data) {

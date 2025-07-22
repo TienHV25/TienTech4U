@@ -21,16 +21,23 @@ const HomePage = () => {
   const searchProduct = useSelector((state) => state.product.search)
   const seaerchDebounce = useDebounce(searchProduct,1000)
   const [stateProducts,setStateProducts] = useState([])
+  const [typeProducts,setTypeProducts] = useState([])
   const [limit,setLimit] = useState(12)
-
-  const arr = ['TV','Tủ Lạnh','Lap Top','Điện Gia Dụng','Thời Trang Nam','Thời Trang Nữ',
-    'Nội Thất','Đồ Chơi','Giày Dép','Điện Lạnh','Điện Tử','Máy Ảnh','ĐTDĐ','Đồng Hồ','Trang Sức','Balo','Xe Máy','Sách']
   
   const fetchProductAll = async (context) => {
     const limit = context?.queryKey && context?.queryKey[1]
     const search = context?.queryKey && context?.queryKey[2]
     const res = await ProductService.getAllProducts(search,limit)
     setStateProducts(res?.data)
+    return res
+  }
+
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllType()
+    if(res?.status === 'OK')
+    {
+      setTypeProducts(res?.data)
+    }
     return res
   }
 
@@ -47,13 +54,16 @@ const HomePage = () => {
       setStateProducts(products?.data)
     }
   },[products])
-  
-  console.log(products)
+
+  useEffect(() => {
+     fetchAllTypeProduct()
+  },[])
+
   return (
  <>
-  <div  style={{padding:'0 120px'}}>
+  <div  style={{padding:'0 120px',backgroundColor:'white'}}>
     <WrapperTypeProduct>
-        {arr.map( (item) => {
+        {typeProducts.map( (item) => {
           return (
            <TypeProducts name={item} key={item}/>
           )
@@ -63,11 +73,12 @@ const HomePage = () => {
   <div style={{backgroundColor:'#efefef',padding:'0 120px'}}>   
    <SliderComponent arrImages1={[slider1,slider2,slider3]} arrImages2={[slider4,slider5,slider6]} /> 
    <div style={{marginTop:'35px',display:'flex',gap:'15px',flexWrap:'wrap'}}>
-     {stateProducts?.map((product,index) => 
+     {stateProducts?.filter(p => p._id).map((product,index) => 
        {
          return (
           <CardComponent 
-          key={product.id || `product-${index}`} 
+          key={product._id || `product-${index}`} 
+          id={product?._id } 
           countInStock={product.countInStock} 
           description={product.description}
           image={product.image}

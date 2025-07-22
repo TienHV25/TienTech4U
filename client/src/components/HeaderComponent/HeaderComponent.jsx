@@ -122,7 +122,7 @@ const HeaderComponent = () => {
             }
           </LoadingComponent>
          </WrapperIconText>
-         <WrapperIconText>
+         <WrapperIconText onClick={() => navigate('/order')} style={{cursor:'pointer'}}>
             <Badge count={4} size='small'>
                <ShoppingCartOutlined style={{fontSize:'23px',color:'#fff',marginLeft:'20px'}} />
             </Badge>

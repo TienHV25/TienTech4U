@@ -29,7 +29,7 @@ const routes = [
         isPrivate: false
     },
     {
-        path: '/type',
+        path: '/product/:type',
         page: TypeProductPage,
         isShowPage: true,
         isPrivate: false
@@ -47,7 +47,7 @@ const routes = [
         isPrivate: false
     },
     {
-        path: '/product-details',
+        path: '/product-details/:id',
         page: ProductDetail,
         isShowPage: true,
         isPrivate: false

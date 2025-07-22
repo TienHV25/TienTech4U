@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button,Form, Input, Modal, Space } from "antd"
+import { Button,Form, Input, Modal, Select, Space } from "antd"
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined} from '@ant-design/icons'
 import TableComponent from '../TableComponent/TableComponent'
 import { WrapperHeader, WrapperUploadFile } from './style'
 import InputForm from '../InputForm/InputForm'
-import { getBase64 } from '../../utils'
+import { getBase64, renderOptions } from '../../utils'
 import * as ProductService from '../../services/ProductService'
 import { useMutationHook } from '../../hooks/useMutationHook'
 import  LoadingComponent  from '../LoadingComponent/LoadingComponent'
@@ -22,7 +22,8 @@ const AdminProduct = () => {
   const [isEditMode, setIsEditMode] = useState('')
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [productToDelete, setProductToDelete] = useState(null)
-  const searchInput = useRef(null);
+  const [typeSelect,setTypeSelect] = useState('')
+  const searchInput = useRef(null)
   
   const [stateProduct,setStateProduct] = useState({
      name: '',
@@ -31,7 +32,8 @@ const AdminProduct = () => {
      price: '',
      description: '',
      rating: '',
-     image: ''
+     image: '',
+     newType:''
   })
   const [stateProductDetail,setStateProductDetail] = useState({
     name: '',
@@ -48,7 +50,19 @@ const AdminProduct = () => {
       const res = await ProductService.getAllProducts()
       return res
   }
+
+  const fetchAllTypeProduct = async () => {
+      const res = await ProductService.getAllType()
+      return res
+    }
   
+  const typeProduct = useQuery({
+    queryKey: ['type-product'],
+    queryFn: fetchAllTypeProduct,
+  })
+
+  console.log("CHECK TYPE PRODUCT",typeProduct?.data?.data)
+
   const { isPending: isPendingProducts, data: products } = useQuery({
     queryKey: ['products'],
     queryFn: getAllProduct,
@@ -387,6 +401,13 @@ const AdminProduct = () => {
     }
     }
   
+  const handleOnchangeType = (value) => {
+      setStateProduct({
+      ...stateProduct,
+      type: value
+    })
+  }
+  
   const handleCancel = () => {
     setIsModalOpen(false)
     setStateProduct({
@@ -415,7 +436,16 @@ const AdminProduct = () => {
   }
   
   const onFinish = () => {
-    mutation.mutate(stateProduct)
+    const params = {
+     name: stateProduct.name,
+     type: stateProduct.type === 'add_type' ? stateProduct.newType : stateProduct.type,
+     countInStock: stateProduct.countInStock,
+     price: stateProduct.price,
+     description: stateProduct.description,
+     rating: stateProduct.rating,
+     image: stateProduct.image,
+    }
+    mutation.mutate(params)
   }
 
   return (
@@ -477,8 +507,28 @@ const AdminProduct = () => {
               },
             ]}
           >
-            <InputForm onChange={onChange} value={stateProduct.type} name="type"/>
+            <Select
+              name="type"
+              onChange={handleOnchangeType}
+              value={stateProduct.type} 
+              options={renderOptions(typeProduct?.data?.data)}
+            />
           </Form.Item>
+
+          {stateProduct.type === 'add_type' &&
+           <Form.Item
+            label="Loại sản phẩm mới"
+            name="newType"
+            rules={[
+              {
+                required: true,
+                message: 'Hãy nhập loại sản phẩm!',
+              },
+            ]}
+           >
+             <InputForm onChange={onChange} value={stateProduct.newType} name="newType"/>
+           </Form.Item>
+          }
 
           <Form.Item
             label="Số lượng tồn kho"
