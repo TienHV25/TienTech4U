@@ -21,10 +21,19 @@ import { StarFilled } from '@ant-design/icons'
 import ButtonComponent from '../ButtonComponent/ButtonComponent'
 import * as ProductService from '../../services/ProductService'
 import { useQuery } from '@tanstack/react-query'
+import {useDispatch, useSelector} from 'react-redux'
+import { useLocation, useNavigate} from 'react-router-dom'
+import { addOrderProduct } from '../../redux/slides/orderSlide'
+import { toast, Toaster } from 'react-hot-toast'
+
 
 const ProductDetailsComponent = ({ idProduct }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState()
   const [quantity, setQuantity] = useState(1)
+  const user = useSelector((state) => state.user)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const dispatch = useDispatch()
 
   const {
     data: detaiProduct,
@@ -64,7 +73,32 @@ const ProductDetailsComponent = ({ idProduct }) => {
     setSelectedImageIndex(index)
   }
 
+  const handleAddOrderProduct = () => {
+      if(!user?.id){
+        navigate("/sign-in",{state:location?.pathname})
+      }else{
+        dispatch(addOrderProduct({
+          orderItem:{
+              name:detaiProduct?.name,
+              amount:quantity,
+              image:detaiProduct?.image,
+              price:detaiProduct?.price,
+              product:idProduct
+          }
+        }
+        ))
+        toast.success('Chọn mua sản phẩm thành công, vui lòng vào giỏ hàng')
+      }
+  }
+
   return (
+    <>
+    <Toaster position="bottom-right" reverseOrder={false} toastOptions={{
+     style: {
+      fontSize: '16px',
+      padding: '12px 16px',
+    },
+    }}/>
     <Row>
       <Col span={10} style={{ padding: '16px', backgroundColor: '#fff' }}>
         <Image
@@ -161,6 +195,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
               fontSize: '16px'
             }}
             textButton={'Chọn Mua'}
+            onClick={handleAddOrderProduct}
           ></ButtonComponent>
 
           <ButtonComponent
@@ -182,6 +217,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         </div>
       </Col>
     </Row>
+    </>
   )
 }
 

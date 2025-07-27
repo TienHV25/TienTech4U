@@ -7,8 +7,9 @@ import { useSelector } from 'react-redux'
 import * as UserService from '../../services/UserService'
 import { resetUser } from '../../redux/slides/userSlide'
 import {useDispatch} from "react-redux"
+import LoadingComponent from '../LoadingComponent/LoadingComponent'
 import {searchProduct} from "../../redux/slides/productSlide"
-import LoadingComponent from '../LoadingComponent/LoadingComponent';
+
 
 
 const { Search } = Input;
@@ -20,6 +21,8 @@ const HeaderComponent = () => {
   const [loading,setLoading ] = useState(false)
   const [userAvatar,setUserAvatar] = useState('')
   const [search,setSearch] = useState('')
+  const resetSearchProduct = useSelector((state) => state.product.search)
+  const order = useSelector((state) => state.order)
   const handleNavigateLogin = () => {
       navigate('/sign-in')
   }
@@ -42,6 +45,12 @@ const HeaderComponent = () => {
   useEffect(() => {
     setUserAvatar(user?.avatar)
   },[user?.avatar])
+
+  useEffect(() => {
+  if (resetSearchProduct === '') {
+    setSearch('');
+  }
+  }, [resetSearchProduct])
 
   const content = ( 
     <div>
@@ -71,7 +80,7 @@ const HeaderComponent = () => {
          <Search
           placeholder="Nhập thông tin cần tìm"
           allowClear
-          // enterButton="Tìm Kiếm"
+          value={search}
           size="large"
           onChange={onSearch}
          />
@@ -123,7 +132,7 @@ const HeaderComponent = () => {
           </LoadingComponent>
          </WrapperIconText>
          <WrapperIconText onClick={() => navigate('/order')} style={{cursor:'pointer'}}>
-            <Badge count={4} size='small'>
+            <Badge count={order?.orderItems?.length} size='small'>
                <ShoppingCartOutlined style={{fontSize:'23px',color:'#fff',marginLeft:'20px'}} />
             </Badge>
             <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>

@@ -25,11 +25,9 @@ export const MainContent = styled.div`
 
 export const ProductSection = styled.div`
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   justify-content: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  width: 800px;
-  
 `;
 
 export const ProductRow = styled.div`
@@ -38,6 +36,7 @@ export const ProductRow = styled.div`
   margin-bottom: 15px;
   background: white;
   padding: 10px;
+  border-radius: 8px;
 
   &:last-child {
     margin-bottom: 0;
@@ -56,8 +55,9 @@ export const ProductImage = styled.div`
 
 export const ProductInfo = styled.div`
   display: flex;
-  align-item: center;
-  justify-content: center;
+  align-items: center;
+  flex: 1;
+  justify-content: space-between;
 `;
 
 export const ProductName = styled.div`
@@ -65,7 +65,8 @@ export const ProductName = styled.div`
   color: #333;
   margin-bottom: 5px;
   font-weight: 500;
-  margin-right:125px;
+  flex: 1;
+  margin-right: 15px;
 `;
 
 export const ProductPrice = styled.div`

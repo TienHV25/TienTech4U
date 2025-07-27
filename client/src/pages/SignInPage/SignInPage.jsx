@@ -6,7 +6,7 @@ import imgRightLogin from "../../assets/images/login.png"
 import { Image, Input } from 'antd'
 import imgCloseLogin from "../../assets/images/closelogo.png"
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,useLocation } from 'react-router-dom'
 import * as UserService from '../../services/UserService'
 import { useMutationHook } from '../../hooks/useMutationHook'
 import LoadingComponent from '../../components/LoadingComponent/LoadingComponent'
@@ -15,11 +15,11 @@ import {useDispatch} from "react-redux"
 import { updateUser } from '../../redux/slides/userSlide'
 
 
-
 const SignInPage = () => {
 const [isVisible, setIsVisible] = useState(true)
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
+const location = useLocation()
 const dispatch = useDispatch()
   
 const handleOnChangeEmail = (e) => {
@@ -50,8 +50,12 @@ const { data,isPending,isSuccess} = mutation
 
 useEffect(() => {
   if(isSuccess && data?.status !== 'ERR')
-  {
-      navigate('/')
+  {   
+      if(location?.state){
+        navigate(location?.state)
+      }else{
+        navigate('/')
+      }
       localStorage.setItem('access_token',  JSON.stringify(data?.access_token))
       if(data?.access_token) {
       const decoded = jwtDecode(data?.access_token)
@@ -69,7 +73,7 @@ const handleGetUserDetail = async (id,token) => {
   dispatch(updateUser({...res?.data,access_token:token}))
 }
 
-console.log('mutation:',mutation)
+
 
 if (!isVisible) return null
 
@@ -80,7 +84,6 @@ const handleSignIn = () => {
     email,
     password
   })
-  console.log('sign-in:',email,password)
 }
 
   return (

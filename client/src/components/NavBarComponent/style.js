@@ -7,13 +7,21 @@ export const WrapperContent = styled.div`
 `
 export const WrapperLableText = styled.h4`
     color: rgb(56,56,61);
-    font-size:14px;
+    font-size:16px;
     font-weight:400px;
 `
 export const WrapperTextValue = styled.div`
     color: rgb(56,56,61);
-    font-size:16px;
-    font-weight:400px;
+    font-weight:400;
+    padding:5px;
+    font-size:14px;
+    cursor: pointer;
+    font-family: Inter, Arial, sans-serif;
+
+    &:hover {
+    color: white;
+    background:rgb(118, 178, 218);
+  }
 `
 export const WrapperRating = styled.span`
     margin-left:5px;

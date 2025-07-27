@@ -12,10 +12,13 @@ export const productSlice = createSlice({
     searchProduct: (state,action) => {
       state.search = action.payload
     },
+    resetSearchProduct: (state) => {
+      state.search = ''
+    }
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { searchProduct } = productSlice.actions
+export const { searchProduct,resetSearchProduct } = productSlice.actions
 
 export default productSlice.reducer

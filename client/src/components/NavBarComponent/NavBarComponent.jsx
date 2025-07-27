@@ -1,59 +1,47 @@
-import React from 'react'
-import { WrapperContent, WrapperLableText, WrapperPrice, WrapperRating, WrapperTextValue } from './style'
-import { Checkbox, Rate } from 'antd'
+import React, { useState,useEffect } from 'react'
+import { WrapperContent, WrapperLableText, WrapperTextValue } from './style'
+import * as ProductService from '../../services/ProductService'
+import { useNavigate} from 'react-router-dom'
+import {useDispatch} from "react-redux"
+import {resetSearchProduct} from "../../redux/slides/productSlide"
+
 
 const NavBarComponent = () => {
-  const onChange = () => {}
-  const renderContent = (type,options) => {
-     switch(type) {
-        case 'text':
-            return options.map((option) => {
-                return (
-                     <div> 
-                        <WrapperTextValue>{option}</WrapperTextValue>
-                     </div>
-                ) 
-            }
-            )
-        case 'checkbox': 
-            return options.map( (option) => {
-                return (
-                    <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>               
-                       <Checkbox value={option.value}>{option.lable}</Checkbox>                  
-                    </Checkbox.Group>
-                )
-            } 
-            )
-        case 'rating':
-            return options.map((option) => {
-                return (
-                <>
-                    <div style={{display:'flex',marginBottom:'5px'}}>
-                       <Rate style={{fontSize:'12px'}} disabled defaultValue={option} />
-                       <WrapperRating>{`tu ${option} sao`}</WrapperRating>
-                    </div>
-                </> 
-                ) 
-            }
-            )
-        case 'price':
-            return options.map((option) => {
-                return (      
-                    <WrapperPrice>
-                         {option}
-                    </WrapperPrice>
-                ) 
-            }
-            )
-        default: 
-            return{}
-    }
+ const [typeProducts,setTypeProducts] = useState([])
+ const [pendingType, setPendingType] = useState(null)
+ const navigate = useNavigate()
+ const dispatch = useDispatch()
 
+ const fetchAllTypeProduct = async () => {
+      const res = await ProductService.getAllType()
+      if(res?.status === 'OK')
+      {
+        setTypeProducts(res?.data)
+      }
+      return res
+ }
+
+ const handleNavigateType = (type) => {
+   navigate(`/product/${type.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ /g, '_')}`, {
+      state: type,
+    })
+   setTimeout(() => {
+     dispatch(resetSearchProduct())
+  }, 500) 
   }
+
+ useEffect(() => {
+    fetchAllTypeProduct()
+ },[])
+
   return (
     <WrapperContent>
-        <WrapperLableText>Label</WrapperLableText>
-        {renderContent('text',['Tu Lanh','TV','May Giat'])}
+        <WrapperLableText>Danh mục sản phẩm</WrapperLableText>
+        {typeProducts.map((item,index) => {
+              return(
+                <WrapperTextValue key={index} onClick={() => handleNavigateType(item)}>{item}</WrapperTextValue>
+              )
+        })}
     </WrapperContent>
   )
 }
