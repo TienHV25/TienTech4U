@@ -2,7 +2,7 @@ const Product = require("../models/ProductModel")
 const jwtService = require('../services/jwtService')
 
 const createProduct = async (newProduct) => {
-    const { name,image,type,price,countInStock,rating,description } = newProduct
+    const { name,image,type,price,countInStock,rating,description,discount } = newProduct
     try {
         const checkproduct = await Product.findOne({ name: name })
         if (checkproduct) {
@@ -18,7 +18,8 @@ const createProduct = async (newProduct) => {
             price,
             countInStock,
             rating,
-            description
+            description,
+            discount
         })
 
         if (createdProduct) {
@@ -36,6 +37,7 @@ const createProduct = async (newProduct) => {
 const getProductAll = async (limit,page,sort,filter) => {
     try {
         const totalProduct = await Product.countDocuments()
+        let productAll = ''
         if (sort) {
             const objectSort = {}
             objectSort[sort[1]] = sort[0]
@@ -65,7 +67,11 @@ const getProductAll = async (limit,page,sort,filter) => {
                 }
             }
         }
-        const productAll = await Product.find().limit(limit).skip(page * limit)
+        if(!limit){
+           productAll = await Product.find()
+        }else {
+           productAll = await Product.find().limit(limit).skip(page * limit)
+        }
         if (!productAll) {
             return {
                 status: 'ERR',

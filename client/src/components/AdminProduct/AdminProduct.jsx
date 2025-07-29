@@ -33,7 +33,8 @@ const AdminProduct = () => {
      description: '',
      rating: '',
      image: '',
-     newType:''
+     newType:'',
+     discount:''
   })
   const [stateProductDetail,setStateProductDetail] = useState({
     name: '',
@@ -42,7 +43,8 @@ const AdminProduct = () => {
     price: '',
     description: '',
     rating: '',
-    image: ''
+    image: '',
+    discount:'',
  })
 
 
@@ -61,8 +63,6 @@ const AdminProduct = () => {
     queryFn: fetchAllTypeProduct,
   })
 
-  console.log("CHECK TYPE PRODUCT",typeProduct?.data?.data)
-
   const { isPending: isPendingProducts, data: products } = useQuery({
     queryKey: ['products'],
     queryFn: getAllProduct,
@@ -78,7 +78,8 @@ const AdminProduct = () => {
         price: res?.data?.price,
         description: res?.data?.description,
         rating: res?.data?.rating,
-        image: res?.data?.image
+        image: res?.data?.image,
+        discount:res?.data?.discount,
       })
      } 
   }
@@ -107,8 +108,8 @@ const AdminProduct = () => {
 
   const mutation = useMutationHook(
     (data) => {
-      const {name,type,countInStock,price,description,rating,image} = data
-      return ProductService.createProducts({name,type,countInStock,price,description,rating,image})
+      const {name,type,countInStock,price,description,rating,image,discount} = data
+      return ProductService.createProducts({name,type,countInStock,price,description,rating,image,discount})
        },
       {
         onSuccess: () => {
@@ -139,6 +140,7 @@ const AdminProduct = () => {
 
   const onUpdateProduct = () => {
     updateMutation.mutate({ id: rowSelected, data: stateProductDetail })
+     console.log(stateProductDetail)
   }
 
   const mutationDelete = useMutationHook((id) => ProductService.deleteProduct(id))
@@ -417,7 +419,8 @@ const AdminProduct = () => {
       price: '',
       description: '',
       rating: '',
-      image: ''
+      image: '',
+      discount: ''
     })
     form.resetFields()
   }
@@ -430,7 +433,8 @@ const AdminProduct = () => {
       price: '',
       description: '',
       rating: '',
-      image: ''
+      image: '',
+      discount: ''
     })
     setIsOpenDraw(false)
   }
@@ -444,6 +448,7 @@ const AdminProduct = () => {
      description: stateProduct.description,
      rating: stateProduct.rating,
      image: stateProduct.image,
+     discount: stateProduct.discount
     }
     mutation.mutate(params)
   }
@@ -582,6 +587,20 @@ const AdminProduct = () => {
             <InputForm onChange={onChange} value={stateProduct.rating} name="rating"/>
           </Form.Item>
 
+           <Form.Item
+            label="Giảm giá"
+            name="discount"
+            rules={[
+              {
+                required: true,
+                message: 'Hãy nhập discount sản phẩm!',
+              },
+            ]}
+          >
+            <InputForm onChange={onChange} value={stateProduct.discount} name="discount"/>
+          </Form.Item>
+
+
           <Form.Item
             label="Hình ảnh"
             name="image"
@@ -709,6 +728,19 @@ const AdminProduct = () => {
               ]}
             >
               <InputForm onChange={onChangeDetail} value={stateProductDetail.rating} name="rating"/>
+            </Form.Item>
+
+            <Form.Item
+              label="Giảm giá"
+                name="discount"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Hãy nhập discount sản phẩm!',
+                  },
+                ]}
+            > 
+              <InputForm onChange={onChangeDetail} value={stateProductDetail.discount} name="discount"/>
             </Form.Item>
 
             <Form.Item

@@ -210,7 +210,7 @@ export const TaxNote = styled.div`
   margin-bottom: 20px;
 `;
 
-export const CheckoutButton = styled.button`
+export const CheckoutButtonSuccess = styled.button`
   background: #ff4757;
   color: white;
   border: none;
@@ -228,5 +228,26 @@ export const CheckoutButton = styled.button`
   
   &:active {
     background: #e63946;
+  }
+`;
+
+export const CheckoutButtonFail = styled.button`
+  background:rgba(97, 92, 93, 0.33);
+  color: white;
+  border: none;
+  padding: 12px 0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: not-allowed;
+  width: 100%;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background: rgba(97, 92, 93, 0.33);
+  }
+  
+  &:active {
+    background: rgba(97, 92, 93, 0.33);
   }
 `;

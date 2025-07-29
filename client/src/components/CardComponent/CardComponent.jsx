@@ -5,21 +5,13 @@ import ProductImage from '../../assets/images/product.webp'
 import { useNavigate } from 'react-router-dom'
 
 const CardComponent = (props) => {
-  const {countInStock,description,image,name,price,rating,type,selled,discount,id} = props
+  const {image,name,price,rating,selled,discount,id} = props
   const navigate = useNavigate()
   const handelDetailProduct = (id) => {
     if(id)
     {
       navigate(`/product-details/${id}`)
     }
-  }
-  
-  const calcDiscount = (countInStock) => {
-    if (countInStock > 1000) return 30;
-    if (countInStock > 500) return 20;
-    if (countInStock > 100) return 10;
-    if (countInStock > 10) return 5;
-    return 0;
   }
   
   return (
@@ -39,7 +31,7 @@ const CardComponent = (props) => {
     <WrapperPriceText>
       {price?.toLocaleString('vi-VN')}đ
       <WrapperDiscountText>
-       -{discount || calcDiscount(countInStock)}%
+       {-discount || 0}%
       </WrapperDiscountText>
     </WrapperPriceText>
 
