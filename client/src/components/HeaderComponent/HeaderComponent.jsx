@@ -131,14 +131,22 @@ const HeaderComponent = () => {
             }
           </LoadingComponent>
          </WrapperIconText>
+         {user?.id ?
          <WrapperIconText onClick={() => navigate('/order')} style={{cursor:'pointer'}}>
             <Badge count={order?.orderItems?.length} size='small'>
                <ShoppingCartOutlined style={{fontSize:'23px',color:'#fff',marginLeft:'20px'}} />
             </Badge>
             <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
          </WrapperIconText>
+         : 
+         <WrapperIconText onClick={() =>  navigate('/sign-in')} style={{cursor:'pointer'}}>
+            <Badge count={order?.orderItems?.length} size='small'>
+               <ShoppingCartOutlined style={{fontSize:'23px',color:'#fff',marginLeft:'20px'}} />
+            </Badge>
+            <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
+         </WrapperIconText>
+         }
          </WrapperAccountHeader>
-         
        </Col>
      </WrapperHeader>
   )

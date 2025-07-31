@@ -25,15 +25,39 @@ import {useDispatch, useSelector} from 'react-redux'
 import { useLocation, useNavigate} from 'react-router-dom'
 import { addOrderProduct } from '../../redux/slides/orderSlide'
 import { toast, Toaster } from 'react-hot-toast'
+import { Button,  Form,  Input, message,  Modal } from "antd"
+import { useMutationHook } from '../../hooks/useMutationHook'
+import * as UserService from '../../services/UserService'
+import { isJsonString } from '../../utils'
+import {updateUser} from '../../redux/slides/userSlide'
 
 
 const ProductDetailsComponent = ({ idProduct }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState()
   const [quantity, setQuantity] = useState(1)
   const user = useSelector((state) => state.user)
+  const [isModalOpen,setIsModalOpen] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const [form] = Form.useForm()
+
+  const updateMutation = useMutationHook( 
+    ({ id, token,data }) => UserService.updateUser(id, token,data ),
+    {
+      onSuccess: (response) => {
+        message.success('Cập nhật người dùng thành công!')
+        setIsModalOpen(false)
+
+        if (response?.data) {
+          dispatch(updateUser(response.data))
+        }
+        },
+      onError: () => {
+        message.error('Cập nhật thất bại!')
+      }
+    }
+  )
 
   const {
     data: detaiProduct,
@@ -73,6 +97,14 @@ const ProductDetailsComponent = ({ idProduct }) => {
     setSelectedImageIndex(index)
   }
 
+  const handleChangeAddress = () => {
+    form.setFieldsValue({
+          email: user?.email || '',
+          address: user?.address || '',
+        });
+     setIsModalOpen(true)
+  }
+
   const handleAddOrderProduct = () => {
       if(!user?.id){
         navigate("/sign-in",{state:location?.pathname})
@@ -88,8 +120,22 @@ const ProductDetailsComponent = ({ idProduct }) => {
         }
         ))
         toast.success('Chọn mua sản phẩm thành công, vui lòng vào giỏ hàng')
+         console.log(detaiProduct)
       }
   }
+
+  const onFinish = (values) => {
+    let storageData= localStorage.getItem('access_token')
+    if(storageData && isJsonString(storageData) ) {
+    storageData = JSON.parse(storageData)
+    updateMutation.mutate({ id: user?.id, token: storageData, data: values})
+  }}
+
+  const handleCancel = () => {
+      setIsModalOpen(false)
+      form.resetFields()
+  }
+  
 
   return (
     <>
@@ -167,10 +213,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
         <div>
           <Row>
             <Col span={20}>
-              <WrapperAdressProduct> Giao đến Q. 1, P. Bến Nghé, Hồ Chí Minh</WrapperAdressProduct>
+              <WrapperAdressProduct> Giao đến {user?.address ?  user?.address : 'Q. 1, P. Bến Nghé, Hồ Chí Minh'}</WrapperAdressProduct>
             </Col>
             <Col span={4}>
-              <WrapperChangeAdress>Đổi địa chỉ</WrapperChangeAdress>
+              <WrapperChangeAdress onClick={() => handleChangeAddress()}>Đổi địa chỉ</WrapperChangeAdress>
             </Col>
           </Row>
         </div>
@@ -217,6 +263,56 @@ const ProductDetailsComponent = ({ idProduct }) => {
         </div>
       </Col>
     </Row>
+     <Modal title="Cập nhật thông tin người dùng"  open={isModalOpen} onCancel={handleCancel}  okButtonProps={{ style: { display: 'none' } }}>
+                     <Form
+                        name="basic"
+                        labelCol={{
+                          span: 4,
+                        }}
+                        wrapperCol={{
+                          span: 20,
+                        }}
+                        style={{
+                          maxWidth: 600,
+                        }}
+                        onFinish={onFinish}
+                        form={form}
+                        autoComplete="off"
+                      >   
+                          <Form.Item
+                            label="Email"
+                            name="email"
+                            hidden={true}
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Hãy nhập email!',
+                              },
+                            ]}
+                          >
+                            <Input  hidden={true} />
+                          </Form.Item>
+              
+                          <Form.Item
+                            label="Địa Chỉ"
+                            name="address"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Hãy nhập Địa Chỉ!',
+                              },
+                            ]}
+                          >
+                            <Input  />
+                          </Form.Item>
+    
+                          <Form.Item label={null}>
+                            <Button type="primary" htmlType="submit">
+                              Submit
+                            </Button>
+                          </Form.Item>
+                        </Form>
+            </Modal>
     </>
   )
 }

@@ -34,6 +34,7 @@ import {
   CheckoutButtonFail,
   ColumnHeader
 } from './style';
+import { useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
   const [selectedItems, setSelectedItems] = useState([])
@@ -44,6 +45,7 @@ const OrderPage = () => {
   const [countProduct,setCountProduct] = useState(0)
   const dispatch = useDispatch()
   const [discountTotal, setDiscountTotal] = useState(0)
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (order && order.orderItems) {
@@ -132,8 +134,12 @@ const OrderPage = () => {
         });
         setIsModalOpen(true)
       }
-    else{
-        console.log('user',user)
+    else if(user?.phone  && user?.address && user?.name && selectedItems.length > 0 )
+    {  
+        localStorage.setItem('selectedItems', JSON.stringify(
+         order.orderItems.filter(item => selectedItems.includes(item.product))
+        ))
+        navigate('/payment');
     }
   }
 
@@ -141,6 +147,16 @@ const OrderPage = () => {
       setIsModalOpen(false)
       form.resetFields()
     }
+  
+  const handleChangeAddress = () => {
+    form.setFieldsValue({
+          email: user?.email || '',
+          name: user?.name || '',
+          phone: user?.phone || '',
+          address: user?.address || '',
+        });
+     setIsModalOpen(true)
+  }
   
   const updateMutation = useMutationHook( 
     ({ id, token,data }) => UserService.updateUser(id, token,data ),
@@ -260,6 +276,17 @@ const OrderPage = () => {
 
 
         <SummarySection>
+           <SummaryRow style={{display:'flex',flexDirection:'column'}}> 
+            <div>
+              <span style={{fontSize:'14px'}}>Địa chỉ giao hàng:</span>
+            </div>
+            <div>
+              <span style={{fontSize:'14px',marginLeft:'5px',fontWeight:'bold'}}>{user?.address}</span>
+           </div>
+            <div>
+              <span onClick={() => handleChangeAddress()} style={{fontSize:'14px',marginLeft:'10px',color:'blue',cursor:'pointer'}}>Thay đổi</span>
+            </div>
+           </SummaryRow>
           <SummaryRow>
             <SummaryLabel>Tạm tính</SummaryLabel>
             <SummaryValue>{totalPrice.toLocaleString('vi-VN')} đ</SummaryValue>

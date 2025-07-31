@@ -8,6 +8,7 @@ import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import UserProfile from "../pages/UserProfile/UserProfile";
+import PaymentPage from "../pages/Paymentpage/PaymentPage";
 
 const routes = [
     {
@@ -63,6 +64,11 @@ const routes = [
         page: Adminpage,
         isShowPage: true,
         isPrivate: true
+    },
+    {
+        path: '/payment',
+        page: PaymentPage,
+        isShowPage: true,
     },
     {
         path: '/*',

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const orderSchema = new mongoose.Schema(
     {
-        orderItmes:[
+        orderItems:[
             {
                 name:
                 {
@@ -46,7 +46,7 @@ const orderSchema = new mongoose.Schema(
                 city:
                 {
                     type:String,
-                    required:true
+                    required:false
                 },
                 phone:
                 {
@@ -68,7 +68,7 @@ const orderSchema = new mongoose.Schema(
         },
         taxPrice:{
             type:Number,
-            required:true
+            required:false
         },
         totalPrice:{
             type:Number,

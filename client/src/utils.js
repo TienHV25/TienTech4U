@@ -1,3 +1,4 @@
+
 export const isJsonString = (data) => {
     try {
         JSON.parse(data)   
