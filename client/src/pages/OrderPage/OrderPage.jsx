@@ -35,6 +35,7 @@ import {
   ColumnHeader
 } from './style';
 import { useNavigate } from 'react-router-dom';
+import ShippingPriceSteps from '../../components/ShippingPriceSteps/ShippingPriceSteps';
 
 const OrderPage = () => {
   const [selectedItems, setSelectedItems] = useState([])
@@ -188,7 +189,7 @@ const OrderPage = () => {
 
   const tax = useMemo(() => {
     if (totalPrice === 0) return 0;
-    return totalPrice > 1000000 ? 10000 : 20000;
+    return totalPrice >= 2000000 ? 0 : totalPrice >= 1000000 ? 10000 : 20000;
   }, [totalPrice])
 
   return (
@@ -274,8 +275,12 @@ const OrderPage = () => {
           ))}
         </ProductSection>
 
-
         <SummarySection>
+          <ShippingPriceSteps 
+            totalPrice={totalPrice || 0}
+            selectedItems={selectedItems}
+          />
+          
            <SummaryRow style={{display:'flex',flexDirection:'column'}}> 
             <div>
               <span style={{fontSize:'14px'}}>Địa chỉ giao hàng:</span>

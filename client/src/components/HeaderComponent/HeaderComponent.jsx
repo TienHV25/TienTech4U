@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {Badge, Col,Input, Popover} from 'antd'
-import { WrapperHeader, WrapperTextHeader,WrapperAccountHeader, WrapperTextHeaderSmall, WrapperContentPopUp, WrapperTextHeaderSmallLogin, WrapperIconText} from './style'
+import { WrapperHeader, WrapperTextHeader,WrapperAccountHeader, WrapperTextHeaderSmall,
+   WrapperContentPopUp, WrapperTextHeaderSmallLogin, WrapperIconText} from './style'
 import {UserOutlined,CaretDownOutlined,ShoppingCartOutlined,HomeOutlined} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'

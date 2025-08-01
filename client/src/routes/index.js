@@ -9,6 +9,7 @@ import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import UserProfile from "../pages/UserProfile/UserProfile";
 import PaymentPage from "../pages/Paymentpage/PaymentPage";
+import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 
 const routes = [
     {
@@ -68,6 +69,11 @@ const routes = [
     {
         path: '/payment',
         page: PaymentPage,
+        isShowPage: true,
+    },
+    {
+        path: '/orderSuccess',
+        page: OrderSuccess,
         isShowPage: true,
     },
     {

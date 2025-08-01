@@ -42,7 +42,7 @@ export const orderSlice = createSlice({
    },
    removeOrderProductAll: (state, action) => {
     const {selectedItems} = action.payload
-    if(selectedItems.length === state.orderItems.length ){
+    if(selectedItems?.length === state.orderItems.length ){
         state.orderItems = []
     }
    },

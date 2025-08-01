@@ -1,6 +1,5 @@
 import React, { useState , useEffect, useMemo } from 'react';
 import { useSelector , useDispatch } from 'react-redux'
-import {updateOrderAmount,removeOrderProduct,removeOrderProductAll} from '../../redux/slides/orderSlide'
 import {getDetailProduct} from '../../services/ProductService'
 import { toast, Toaster } from 'react-hot-toast'
 import { Button,  Form,  Input,  message,  Modal } from "antd"
@@ -9,10 +8,11 @@ import * as UserService from '../../services/UserService'
 import * as OrderService from '../../services/OrderService'
 import { isJsonString } from '../../utils'
 import {updateUser} from '../../redux/slides/userSlide'
+import {orderConstant} from '../../constant'
 import {
   Container,
   Header,
-  MainContent,
+  MainContent, 
   ProductSection,
   SummarySection,
   SummaryRow,
@@ -30,6 +30,7 @@ import {
   OptionLabel,
   OptionText
 } from './style';
+import { useNavigate } from 'react-router-dom';
 const PaymentPage = () => {
   const [isModalOpen,setIsModalOpen] = useState(false)
   const order = useSelector((state) => state.order)
@@ -38,32 +39,39 @@ const PaymentPage = () => {
   const dispatch = useDispatch()
   const [discountTotal, setDiscountTotal] = useState(0)
   const selectedItems = JSON.parse(localStorage.getItem('selectedItems') || '[]');
-  const payment = 'Thanh toán tiền mặt khi nhận hàng'
+  const [delivery,setDelivery] = useState(orderConstant.delivery.fast)
+  const [payment,setPayment] = useState(orderConstant.payment.later_money)
+  const navigate = useNavigate()
+ 
+  useEffect(() => {
+    const fetchDiscounts = async () => {
+      let totalDiscount = 0;
 
-
-    useEffect(() => {
-      const fetchDiscounts = async () => {
-        let totalDiscount = 0;
-
-        for (const item of selectedItems) {
-          const productDetail = await getDetailProduct(item.product);
-          if (productDetail?.data?.discount) {
-            const discountAmount = (item.price * productDetail.data.discount) / 100;
-            totalDiscount += discountAmount * item.amount;
-          }
+      for (const item of selectedItems) {
+        const productDetail = await getDetailProduct(item.product);
+        if (productDetail?.data?.discount) {
+          const discountAmount = (item.price * productDetail.data.discount) / 100;
+          totalDiscount += discountAmount * item.amount;
         }
-
-        setDiscountTotal(totalDiscount)
       }
 
-      fetchDiscounts()
-    }, [selectedItems])
+      setDiscountTotal(totalDiscount)
+    }
+
+    fetchDiscounts()
+  }, [selectedItems])
 
   const addOrderMutation  = useMutationHook( 
     ({  token,data }) => OrderService.createOrder( token,data ),
     {
       onSuccess: () => {
         message.success('Đặt hàng thành công!')
+        navigate('/orderSuccess',{state :
+          { delivery : delivery,
+            payment: payment,
+            selectedItems:selectedItems,
+            totalPrice:finalPrice
+          }})
       },
       onError: () => {
         message.error('Đặt hàng thất bại!')
@@ -152,14 +160,16 @@ const PaymentPage = () => {
             <SectionTitle>Chọn phương thức giao hàng</SectionTitle>
 
             <OptionBox type="fast">
-              <Radio type="radio" name="shipping" defaultChecked />
-              <OptionLabel type="fast">FAST</OptionLabel>
+              <Radio type="radio" name="shipping" checked={delivery === orderConstant.delivery.fast}
+               onChange={() => setDelivery(orderConstant.delivery.fast)} />
+              <OptionLabel type="fast">{orderConstant.delivery.fast}</OptionLabel>
               <OptionText>Giao hàng tiết kiệm</OptionText>
             </OptionBox>
 
             <OptionBox type="gojek" $last>
-              <Radio type="radio" name="shipping" />
-              <OptionLabel type="gojek">GO_JEK</OptionLabel>
+              <Radio type="radio" name="shipping" checked={delivery === orderConstant.delivery.gojeck}
+               onChange={() => setDelivery(orderConstant.delivery.gojeck)} />
+              <OptionLabel type="gojek">{orderConstant.delivery.gojeck}</OptionLabel>
               <OptionText>Giao hàng tiết kiệm</OptionText>
             </OptionBox>
           </SectionBox>
@@ -167,8 +177,10 @@ const PaymentPage = () => {
           <SectionBox>
             <SectionTitle>Chọn phương thức thanh toán</SectionTitle>
             <OptionBox>
-              <Radio type="radio" name="payment" defaultChecked />
-              <OptionText>{payment}</OptionText>
+              <Radio type="radio" name="payment" 
+              checked={payment === orderConstant.payment.later_money}
+              onChange={() => setPayment(orderConstant.payment.later_money)} />
+              <OptionText>{orderConstant.payment.later_money}</OptionText>
             </OptionBox>
           </SectionBox>
         </ProductSection>
