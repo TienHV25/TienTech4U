@@ -8,6 +8,7 @@ import * as UserService from '../../services/UserService'
 import * as OrderService from '../../services/OrderService'
 import { isJsonString } from '../../utils'
 import {updateUser} from '../../redux/slides/userSlide'
+import { useLocation } from 'react-router-dom'
 import {orderConstant} from '../../constant'
 import {
   Container,
@@ -32,16 +33,18 @@ import {
 } from './style';
 import { useNavigate } from 'react-router-dom';
 const PaymentPage = () => {
+  const location = useLocation()
+  const selectedItems = location.state?.selectedItems 
   const [isModalOpen,setIsModalOpen] = useState(false)
   const order = useSelector((state) => state.order)
   const [form] = Form.useForm()
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const [discountTotal, setDiscountTotal] = useState(0)
-  const selectedItems = JSON.parse(localStorage.getItem('selectedItems') || '[]');
   const [delivery,setDelivery] = useState(orderConstant.delivery.fast)
   const [payment,setPayment] = useState(orderConstant.payment.later_money)
   const navigate = useNavigate()
+  
  
   useEffect(() => {
     const fetchDiscounts = async () => {
@@ -73,8 +76,8 @@ const PaymentPage = () => {
             totalPrice:finalPrice
           }})
       },
-      onError: () => {
-        message.error('Đặt hàng thất bại!')
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || "Đã xảy ra lỗi")
       }
     }
   )

@@ -36,6 +36,10 @@ const HeaderComponent = () => {
       navigate('/system/admin')
   }
 
+  const handleNavigateUserOrder = () => {
+      navigate('/user-order')
+  }
+
   const handleLogout = async () => {
     setLoading(true)
     await UserService.logoutUser()
@@ -57,6 +61,7 @@ const HeaderComponent = () => {
     <div>
       <WrapperContentPopUp onClick={handleLogout}>Đăng Xuất</WrapperContentPopUp>
       <WrapperContentPopUp onClick={handleNavigateUserProfile}>Thông tin người dùng</WrapperContentPopUp>
+      <WrapperContentPopUp onClick={handleNavigateUserOrder}>Đơn hàng của tôi</WrapperContentPopUp>
       {user?.isAdmin && (
       <WrapperContentPopUp onClick={handleNavigateSystemAdmin}>Quản lý hệ thống</WrapperContentPopUp>
       )

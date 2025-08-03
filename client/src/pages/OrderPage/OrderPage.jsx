@@ -135,13 +135,15 @@ const OrderPage = () => {
         });
         setIsModalOpen(true)
       }
-    else if(user?.phone  && user?.address && user?.name && selectedItems.length > 0 )
-    {  
-        localStorage.setItem('selectedItems', JSON.stringify(
-         order.orderItems.filter(item => selectedItems.includes(item.product))
-        ))
-        navigate('/payment');
-    }
+   else if (user?.phone && user?.address && user?.name && selectedItems.length > 0) {
+  const selectedOrderItems = order.orderItems.filter(item =>
+    selectedItems.includes(item.product)
+  );
+
+  navigate('/payment', {
+    state: { selectedItems: selectedOrderItems }
+  });
+}
   }
 
   const handleCancel = () => {

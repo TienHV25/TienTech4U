@@ -120,7 +120,6 @@ const ProductDetailsComponent = ({ idProduct }) => {
         }
         ))
         toast.success('Chọn mua sản phẩm thành công, vui lòng vào giỏ hàng')
-         console.log(detaiProduct)
       }
   }
 

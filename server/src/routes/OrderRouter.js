@@ -5,5 +5,6 @@ const OrderController = require('../controllers/OrderController')
 
 
 router.post('/create-order',authMiddleWare({requireOwner: true}),OrderController.createOrder)
+router.get('/get-order-details/:id',authMiddleWare({requireOwner: true}),OrderController.getOrderDetails)
 
 module.exports = router

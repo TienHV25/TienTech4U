@@ -36,12 +36,10 @@ const productSchema = new mongoose.Schema(
          discount:
         {
            type:Number,
-           required:false
         },
         description:
         {
            type:String,
-           required:true,
         },
         selled:
         {

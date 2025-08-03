@@ -42,3 +42,26 @@ export const WrapperDiscountText = styled.span`
     font-weight: 500;
     margin-left:3px;
 `
+export const OutOfStockOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.7);
+  color: red;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  z-index: 2;
+  border-radius: 6px;
+`
+
+export const ImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: auto;
+`
+

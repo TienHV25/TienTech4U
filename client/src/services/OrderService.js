@@ -13,9 +13,22 @@ export const createOrder = async (access_token, data) => {
     );
     return res.data;
   } catch (error) {
-    if (error.response && error.response.data) {
-      return error.response.data;
-    }
-    throw error;
+      throw error;
   }
-};
+}
+
+export const getOrderDetails = async (access_token, userID) => {
+  try {
+    const res = await axiosJWT.get(
+      `${process.env.REACT_APP_URL_BACKEND}/order/get-order-details/${userID}`,
+      {
+        headers: {
+          token: `Bearer ${access_token}`
+        }
+      }
+    );
+    return res.data;
+  } catch (error) {
+      throw error;
+  }
+}

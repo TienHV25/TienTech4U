@@ -27,7 +27,6 @@ const OrderSuccess = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log(selectedItems.length)
     dispatch(removeOrderProductAll({ selectedItems }))
   }, [])
 
