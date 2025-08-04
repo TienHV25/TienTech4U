@@ -51,7 +51,7 @@ const createOrder = async (newOrder) => {
 
 const getOrderDetails = async (userID) => {
     try {
-        const order = await Order.findOne({user:userID})
+        const order = await Order.find({user:userID})
         if (!order) {
             return {
                 status: 'ERR',
@@ -68,5 +68,66 @@ const getOrderDetails = async (userID) => {
     }
 }
 
-module.exports = { createOrder,getOrderDetails }
+const getOrderById = async (orderID) => {
+    try {
+        const order = await Order.findOne({_id:orderID})
+        if (!order) {
+            return {
+                status: 'ERR',
+                message: 'Order not exists'
+            }
+        }
+        return {
+            status: 'OK',
+            message: 'Get order successfully',
+            data: order
+        }
+    } catch (e) {
+        throw e 
+    }
+}
+
+const cancelOrder = async (orders) => {
+    try {  
+        for (const item of orders.orderItems) {
+            await Product.findOneAndUpdate(
+                {
+                    _id: item.product
+                },
+                {
+                    $inc: {
+                        countInStock: +item.amount,
+                        selled: -item.amount
+                    }
+                },
+                { new: true }
+            )
+        }
+        const checkProduct = await Order.findOne({ _id:orders?._id })
+        if (!checkProduct) {
+            return {
+                status: 'ERR',
+                message: 'Order not exists'
+            }
+        }
+        const deleteOrder = await Order.findByIdAndDelete(
+            orders?._id
+        )
+        if(!deleteOrder ) {
+            return {
+                status: 'ERR',
+                message: 'Failed to delete order'
+            }
+            }
+        return {
+            status: 'OK',
+            message: 'Order delete successfully'
+        }
+    } catch (e) {
+        throw e 
+    }
+}
+
+
+module.exports = { createOrder,getOrderDetails,getOrderById,cancelOrder }
 

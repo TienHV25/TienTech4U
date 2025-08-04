@@ -65,13 +65,13 @@ const OrderPage = () => {
     const fetchDiscounts = async () => {
       let totalDiscount = 0;
 
-      const filteredItems = order.orderItems.filter(item => selectedItems.includes(item.product));
+      const filteredItems = order.orderItems.filter(item => selectedItems.includes(item.product))
 
       for (const item of filteredItems) {
         const productDetail = await getDetailProduct(item.product);
         if (productDetail && productDetail.data) {
-          const discountAmount = (item.price * productDetail.data.discount) / 100 || 0;
-          totalDiscount += discountAmount * item.amount;
+          const discountAmount = (item.price * productDetail.data.discount) / 100 || 0
+          totalDiscount += discountAmount * item.amount
         }
       }
 
@@ -197,11 +197,11 @@ const OrderPage = () => {
   return (
     <Container>
       <Toaster position="bottom-right" reverseOrder={false} toastOptions={{
-           style: {
-            fontSize: '16px',
-            padding: '12px 16px',
-          },
-          }}/>
+        style: {
+        fontSize: '16px',
+        padding: '12px 16px',
+      },
+      }}/>
       <Header>Giỏ hàng</Header>
       
       <MainContent>

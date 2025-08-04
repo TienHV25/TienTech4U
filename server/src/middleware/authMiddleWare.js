@@ -23,13 +23,13 @@ const authMiddleWare = (options = {}) => (req, res, next) => {
 
    
     if (options.requireOwner) {
-      const paramID = req.params.id;
-      const bodyUserID = req.body.userID;
-      const userID = user.id;
+      const paramID = req.params.id
+      const bodyUserID = req.body.id
+      const userID = user.id
 
       const isOwner = userID === paramID || userID === bodyUserID;
 
-      if (!isOwner && !user.isAdmin) {
+      if (!isOwner) {
         return res.status(403).json({ message: 'Access denied: Not the owner' });
       }
     }

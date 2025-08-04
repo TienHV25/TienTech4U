@@ -11,6 +11,7 @@ import UserProfile from "../pages/UserProfile/UserProfile";
 import PaymentPage from "../pages/Paymentpage/PaymentPage";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import UserOrder from "../pages/UserOrder/UserOrder";
+import OrderDetail from "../pages/OrderDetail/OrderDetail";
 
 const routes = [
     {
@@ -64,6 +65,12 @@ const routes = [
     {
         path: '/user-order',
         page: UserOrder,
+        isShowPage: true,
+        isPrivate: false
+    },
+    {
+        path: '/order-detail/:id',
+        page: OrderDetail,
         isShowPage: true,
         isPrivate: false
     },

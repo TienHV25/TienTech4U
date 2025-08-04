@@ -35,7 +35,7 @@ export const orderSlice = createSlice({
    },
    updateOrderAmount: (state, action) => {
     const { productId, amount } = action.payload
-    const item = state?.orderItems?.find((item) => item?.product === productId);
+    const item = state?.orderItems?.find((item) => item?.product === productId)
     if (item && amount >= 1) {
         item.amount = amount
     }
