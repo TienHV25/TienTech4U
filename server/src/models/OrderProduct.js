@@ -33,6 +33,11 @@ const orderSchema = new mongoose.Schema(
             }
         ],
         shippingAddress: {
+                email:
+                {
+                    type:String,
+                    required:true
+                },
                 fullName:
                 {
                     type:String,
@@ -43,11 +48,6 @@ const orderSchema = new mongoose.Schema(
                     type:String,
                     required:true
                 },
-                city:
-                {
-                    type:String,
-                    required:false
-                },
                 phone:
                 {
                     type:String,
@@ -55,6 +55,10 @@ const orderSchema = new mongoose.Schema(
                 },
         },
         paymentMethod:{
+            type:String,
+            required:true
+        },
+        shippingMethod:{
             type:String,
             required:true
         },

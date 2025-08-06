@@ -1,4 +1,4 @@
-import React, { useState , useEffect, useMemo } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useSelector , useDispatch } from 'react-redux'
 import {getDetailProduct} from '../../services/ProductService'
 import { toast, Toaster } from 'react-hot-toast'
@@ -6,9 +6,11 @@ import { Button,  Form,  Input,  message,  Modal } from "antd"
 import { useMutationHook } from '../../hooks/useMutationHook'
 import * as UserService from '../../services/UserService'
 import * as OrderService from '../../services/OrderService'
+import * as PaymentService from '../../services/PaymentService'
 import { isJsonString } from '../../utils'
 import {updateUser} from '../../redux/slides/userSlide'
 import { useLocation } from 'react-router-dom'
+import { PayPalButton } from "react-paypal-button-v2";
 import {orderConstant} from '../../constant'
 import {
   Container,
@@ -32,18 +34,22 @@ import {
   OptionText
 } from './style';
 import { useNavigate } from 'react-router-dom';
+
+
 const PaymentPage = () => {
   const location = useLocation()
   const selectedItems = location.state?.selectedItems 
+  const tax = location.state?.tax
   const [isModalOpen,setIsModalOpen] = useState(false)
-  const order = useSelector((state) => state.order)
   const [form] = Form.useForm()
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const [discountTotal, setDiscountTotal] = useState(0)
   const [delivery,setDelivery] = useState(orderConstant.delivery.fast)
-  const [payment,setPayment] = useState(orderConstant.payment.later_money)
+  const [payment,setPayment] = useState(orderConstant.payment.paypal)
   const navigate = useNavigate()
+  const [sdkReady,setSdkReady] = useState(false)
+  const [usdPrice, setUsdPrice] = useState(null)
   
  
   useEffect(() => {
@@ -63,6 +69,26 @@ const PaymentPage = () => {
 
     fetchDiscounts()
   }, [selectedItems])
+
+  const addPaypalScript = async () => {
+    const res = await PaymentService.getConfig() 
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src=`https://www.paypal.com/sdk/js?client-id=${res.data}`
+    script.async = true
+    script.onload = () => {
+       setSdkReady(true)
+    }
+    document.body.appendChild(script)
+  }
+
+  useEffect(() => {
+    if(!window.paypal){
+      addPaypalScript()
+    }else{
+      setSdkReady(true)
+    }
+  },[])
 
   const addOrderMutation  = useMutationHook( 
     ({  token,data }) => OrderService.createOrder( token,data ),
@@ -87,12 +113,14 @@ const PaymentPage = () => {
         token: user?.access_token,
         data: {
           orderItems: selectedItems,
+          email: user?.email,
           fullName: user?.name,
           address: user?.address,
           phone: user?.phone,
           paymentMethod: payment,
+          shippingMethod: delivery,
           itemPrice: Number(totalPrice),
-          shippingPrice: Number(shippingPrice),
+          shippingPrice: Number(tax),
           totalPrice: Number(finalPrice),
           user: user?.id
         }
@@ -103,6 +131,27 @@ const PaymentPage = () => {
       setIsModalOpen(false)
       form.resetFields()
     }
+
+  const onSuccessPaypal = (details,data) => {
+    addOrderMutation.mutate({
+        token: user?.access_token,
+        data: {
+          orderItems: selectedItems,
+          email: user?.email,
+          fullName: user?.name,
+          address: user?.address,
+          phone: user?.phone,
+          paymentMethod: payment,
+          shippingMethod: delivery,
+          itemPrice: Number(totalPrice),
+          shippingPrice: Number(tax),
+          totalPrice: Number(finalPrice),
+          user: user?.id,
+          isPaid: true,
+          paidAt: details.update_time
+        }
+    })
+  }
   
   const handleChangeAddress = () => {
     form.setFieldsValue({
@@ -140,12 +189,18 @@ const PaymentPage = () => {
   
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.amount * item.price, 0)
 
-  const shippingPrice = useMemo(() => {
-    if (totalPrice === 0) return 0;
-    return totalPrice > 1000000 ? 10000 : 20000;
-  }, [totalPrice])
+  const finalPrice = (totalPrice - discountTotal + tax)
 
-  const finalPrice = (totalPrice - discountTotal + shippingPrice)
+  useEffect(() => {
+    const fetchRate = async () => {
+      const converted = await PaymentService.convertVNDToUSD(finalPrice);
+      setUsdPrice(converted);
+    };
+
+    if (payment === orderConstant.payment.paypal && sdkReady) {
+      fetchRate();
+    }
+  }, [payment, sdkReady, finalPrice])
 
   return (
     <Container>
@@ -185,6 +240,12 @@ const PaymentPage = () => {
               onChange={() => setPayment(orderConstant.payment.later_money)} />
               <OptionText>{orderConstant.payment.later_money}</OptionText>
             </OptionBox>
+             <OptionBox>
+              <Radio type="radio" name="payment" 
+              checked={payment === orderConstant.payment.paypal}
+              onChange={() => setPayment(orderConstant.payment.paypal)} />
+              <OptionText>{orderConstant.payment.paypal}</OptionText>
+            </OptionBox>
           </SectionBox>
         </ProductSection>
 
@@ -211,14 +272,20 @@ const PaymentPage = () => {
           </SummaryRow>
           <SummaryRow>
             <SummaryLabel>Phí giao hàng</SummaryLabel>
-            <SummaryValue>{shippingPrice.toLocaleString('vi-VN')} đ</SummaryValue>
+            <SummaryValue>{tax?.toLocaleString('vi-VN')} đ</SummaryValue>
           </SummaryRow>
           
           <TotalSection>
             <TotalLabel>Tổng tiền</TotalLabel>
             <TotalAmount>{finalPrice.toLocaleString('vi-VN')} đ</TotalAmount>
             <TaxNote>(đã bao gồm VAT nếu có)</TaxNote>
-            <CheckoutButtonSuccess onClick={() => handleAddOrder()}>Đặt hàng</CheckoutButtonSuccess>
+            {payment === orderConstant.payment.paypal && sdkReady  && usdPrice ?
+                <PayPalButton
+                  amount={usdPrice}
+                  onSuccess={onSuccessPaypal}
+                />
+               :  <CheckoutButtonSuccess onClick={() => handleAddOrder()}>Đặt hàng</CheckoutButtonSuccess>
+            }
           </TotalSection>
         </SummarySection>
         <Modal title="Cập nhật thông tin người dùng"  open={isModalOpen} onCancel={handleCancel}  okButtonProps={{ style: { display: 'none' } }}>

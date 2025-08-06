@@ -2,6 +2,7 @@ const Order = require("../models/OrderProduct")
 const bcrypt = require("bcrypt")
 const jwtService = require('../services/jwtService')
 const Product = require("../models/ProductModel")
+const { sendEmail } = require('./emailService')
 
 const createOrder = async (newOrder) => {
     const { orderItems } = newOrder;
@@ -32,6 +33,30 @@ const createOrder = async (newOrder) => {
 
        
         const createdOrder = await Order.create(newOrder)
+    
+        const orderItemsWithDiscount = await Promise.all(newOrder.orderItems.map(async (item) => {
+            const product = await Product.findById(item.product)
+            const discountPercent = product?.discount || 0
+            const discountAmount = (item.price * discountPercent) / 100
+            return {
+                ...item,
+                discount: discountAmount 
+            }
+        }))
+        await sendEmail({
+            receiverEmail: newOrder.shippingAddress.email, 
+            customerName: newOrder.shippingAddress.fullName,
+            phone: newOrder.shippingAddress.phone,
+            orderItems: orderItemsWithDiscount,
+            shippingAddress: newOrder.shippingAddress.address,
+            paymentMethod: newOrder.paymentMethod,
+            shippingMethod: newOrder.shippingMethod,
+            shippingPrice: newOrder.shippingPrice,
+            totalPrice: newOrder.totalPrice,
+            isPaid: newOrder.isPaid,
+            isDelivery: newOrder.isDelivery
+        })
+        
 
         return {
             status: 'OK',

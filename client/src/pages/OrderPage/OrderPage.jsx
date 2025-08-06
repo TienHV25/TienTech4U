@@ -141,7 +141,7 @@ const OrderPage = () => {
   );
 
   navigate('/payment', {
-    state: { selectedItems: selectedOrderItems }
+    state: { selectedItems: selectedOrderItems,tax: tax }
   });
 }
   }

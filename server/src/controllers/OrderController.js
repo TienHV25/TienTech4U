@@ -3,20 +3,21 @@ OrderService = require('../services/OrderService')
 
 const createOrder = async(req,res) => {
     try {
-       const {paymentMethod, itemPrice, shippingPrice, totalPrice, fullName, address, phone, ...rest} = req.body
+       const {paymentMethod,shippingMethod, itemPrice, shippingPrice, totalPrice, email, fullName, address, phone, ...rest} = req.body
 
-       if (!paymentMethod || !itemPrice || !shippingPrice || !totalPrice || !fullName || !address || !phone) {
+       if (!paymentMethod || !shippingMethod || !itemPrice || !shippingPrice || !totalPrice || !email || !fullName || !address || !phone) {
          return res.status(400).json({
            status:'ERR',
            message: 'Đây là thông tin bắt buộc'
          })
        }
 
-       const shippingAddress = { fullName, address, phone }
+       const shippingAddress = { email, fullName, address, phone }
 
        const response = await OrderService.createOrder({
          ...rest,
          paymentMethod,
+         shippingMethod,
          itemPrice,
          shippingPrice,
          totalPrice,
