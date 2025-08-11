@@ -116,7 +116,8 @@ const HeaderComponent = () => {
                 <div style={{cursor:'pointer'}}>
                 <Popover content={content} trigger="click" overlayStyle={{ width: '170px', height: '10px' }}>
                   <WrapperTextHeaderSmallLogin>
-                      Xin Chào {user?.name}
+                      <span>Xin Chào {user?.name}</span>
+                      <i className="fas fa-chevron-down"></i>
                   </WrapperTextHeaderSmallLogin>
                 </Popover>
                 </div>

@@ -112,6 +112,25 @@ const getOrderById = async (orderID) => {
     }
 }
 
+const getAllOrder = async () => {
+    try {
+        const order = await Order.find().select('shippingAddress paymentMethod totalPrice isPaid isDelivered');
+        if (!order) {
+            return {
+                status: 'ERR',
+                message: 'Order not exists'
+            }
+        }
+        return {
+            status: 'OK',
+            message: 'Get order successfully',
+            data: order
+        }
+    } catch (e) {
+        throw e 
+    }
+}
+
 const cancelOrder = async (orders) => {
     try {  
         for (const item of orders.orderItems) {
@@ -154,5 +173,5 @@ const cancelOrder = async (orders) => {
 }
 
 
-module.exports = { createOrder,getOrderDetails,getOrderById,cancelOrder }
+module.exports = { createOrder,getOrderDetails,getOrderById,cancelOrder,getAllOrder}
 

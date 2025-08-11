@@ -5,7 +5,7 @@ const createOrder = async(req,res) => {
     try {
        const {paymentMethod,shippingMethod, itemPrice, shippingPrice, totalPrice, email, fullName, address, phone, ...rest} = req.body
 
-       if (!paymentMethod || !shippingMethod || !itemPrice || !shippingPrice || !totalPrice || !email || !fullName || !address || !phone) {
+       if (!paymentMethod || !shippingMethod  || !totalPrice || !email || !fullName || !address || !phone) {
          return res.status(400).json({
            status:'ERR',
            message: 'Đây là thông tin bắt buộc'
@@ -69,6 +69,15 @@ const getOrderById = async (req,res) => {
   }
 }
 
+const getAllOrder = async (req,res) => {
+  try {
+    const orderGetAll = await OrderService.getAllOrder()
+    return res.status(200).json(orderGetAll)
+  } catch (error) {
+    return res.status(500).json({message:e})
+  }
+}
+
 const cancelOrder = async(req,res) => {
     try {
         const orderDelete =  await OrderService.cancelOrder(req.body)
@@ -79,4 +88,4 @@ const cancelOrder = async(req,res) => {
     }
 }
 
-module.exports = {createOrder,getOrderDetails,getOrderById,cancelOrder}
+module.exports = {createOrder,getOrderDetails,getOrderById,cancelOrder,getAllOrder}

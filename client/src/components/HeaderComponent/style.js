@@ -41,6 +41,10 @@ export const WrapperTextHeaderSmallLogin = styled.span `
    color:#fff;
    margin-left:10px;
    line-height: 1.5;
+   display:flex;
+   flex-direction:column;
+   align-items:center;
+   gap: 1px;
 `
 
 export const WrapperContentPopUp = styled.p`

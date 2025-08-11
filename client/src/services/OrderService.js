@@ -50,6 +50,22 @@ export const getOrderById = async (access_token, orderID) => {
   }
 }
 
+export const getAllOrder = async (access_token) => {
+  try {
+    const res = await axiosJWT.get(
+      `${process.env.REACT_APP_URL_BACKEND}/order/get-all-order`,
+      {
+        headers: {
+          token: `Bearer ${access_token}`
+        }
+      }
+    )
+    return res.data;
+  } catch (error) {
+      throw error;
+  }
+}
+
 export const cancelOrder = async (token,selectedOrder) => {
   const res = await axiosJWT.delete(`${process.env.REACT_APP_URL_BACKEND}/order/cancel-order`, 
     {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { UserOutlined,ShoppingCartOutlined} from '@ant-design/icons'
+import { UserOutlined,ShoppingCartOutlined, ShoppingOutlined} from '@ant-design/icons'
 import { Menu } from 'antd'
 import AdminUser from '../../components/AdminUser/AdminUser'
 import AdminProduct from '../../components/AdminProduct/AdminProduct'
+import AdminOrder from '../../components/AdminOrder/AdminOrder'
 
 const Adminpage = () => {
   const items = [
@@ -15,6 +16,11 @@ const Adminpage = () => {
       key: 'product',
       icon: <ShoppingCartOutlined/>,
       label: 'Sản phẩm',
+    },
+    {
+      key: 'order',
+      icon: <ShoppingOutlined />,
+      label: 'Đơn Hàng',
     },
   ]
   const [selectedKey, setSelectedKey] = useState('')
@@ -30,6 +36,10 @@ const Adminpage = () => {
       case 'product': 
         return (
           <AdminProduct />
+        )
+      case 'order': 
+        return (
+          <AdminOrder />
         )
       default: 
         return <></>

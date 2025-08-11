@@ -10,7 +10,7 @@ import * as PaymentService from '../../services/PaymentService'
 import { isJsonString } from '../../utils'
 import {updateUser} from '../../redux/slides/userSlide'
 import { useLocation } from 'react-router-dom'
-import { PayPalButton } from "react-paypal-button-v2";
+import { PayPalButton } from "react-paypal-button-v2"
 import {orderConstant} from '../../constant'
 import {
   Container,
