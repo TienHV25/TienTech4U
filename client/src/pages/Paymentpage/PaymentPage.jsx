@@ -125,6 +125,7 @@ const PaymentPage = () => {
           user: user?.id
         }
       })
+      toast.success("Đặt hàng thành công,xin quý khách hãy check thêm email để biết chi tiết đơn hàng")
   }
 
   const handleCancel = () => {
@@ -151,6 +152,7 @@ const PaymentPage = () => {
           paidAt: details.update_time
         }
     })
+    toast.success("Thanh toán thành công,xin quý khách hãy check thêm email để biết chi tiết đơn hàng")
   }
   
   const handleChangeAddress = () => {

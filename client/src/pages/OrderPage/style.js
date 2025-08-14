@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Form } from 'antd';
 
 export const Container = styled.div`
   max-width: 1200px;
@@ -7,6 +8,14 @@ export const Container = styled.div`
   background-color: #f8f9fa;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
+  
+  @media (max-width: 1023px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 767px) {
+    padding: 10px;
+  }
 `;
 
 export const Header = styled.h1`
@@ -15,12 +24,32 @@ export const Header = styled.h1`
   margin-bottom: 20px;
   color: #333;
   padding: 5px 0;
+  
+  @media (max-width: 1023px) {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 767px) {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
 `;
 
 export const MainContent = styled.div`
   display: flex;
   gap: 80px;
   align-items: flex-start;
+  
+  @media (max-width: 1023px) {
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;
 
 export const ProductSection = styled.div`
@@ -28,6 +57,78 @@ export const ProductSection = styled.div`
   flex-direction: column;
   justify-content: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  
+`;
+
+export const SelectAllContainer = styled.div`
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 10px;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  
+  @media (max-width: 1023px) {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 8px;
+  }
+`;
+
+export const SelectAllCheckbox = styled.div`
+  width: 200px;
+  display: flex;
+  align-items: center;
+  
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+  
+  @media (max-width: 1023px) {
+    width: 150px;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+`;
+
+export const SelectAllText = styled.span`
+  font-size: 14px;
+  color: #666;
+`;
+
+export const SelectAllActions = styled.div`
+  flex: 1;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  justify-content: flex-end;
+  
+  @media (max-width: 1023px) {
+    gap: 20px;
+    margin-right: 10px;
+  }
+  
+  @media (max-width: 767px) {
+    width: 100%;
+    margin-right: 0;
+    gap: 15px;
+    justify-content: space-between;
+  }
 `;
 
 export const ProductRow = styled.div`
@@ -41,6 +142,24 @@ export const ProductRow = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+  
+  @media (max-width: 1023px) {
+    padding: 8px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 767px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 8px;
+    gap: 10px;
+  }
+`;
+
+export const ProductCheckbox = styled.input`
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
 `;
 
 export const ProductImage = styled.div`
@@ -51,6 +170,26 @@ export const ProductImage = styled.div`
   overflow: hidden;
   flex-shrink: 0;
   margin-right: 15px;
+  
+  @media (max-width: 1023px) {
+    width: 70px;
+    height: 70px;
+    margin-right: 12px;
+  }
+  
+  @media (max-width: 767px) {
+    width: 60px;
+    height: 60px;
+    margin-right: 0;
+    align-self: flex-start;
+  }
+`;
+
+export const ProductImageContainer = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 `;
 
 export const ProductInfo = styled.div`
@@ -58,6 +197,23 @@ export const ProductInfo = styled.div`
   align-items: center;
   flex: 1;
   justify-content: space-between;
+  
+  @media (max-width: 767px) {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 10px;
+    
+    > div:last-child {
+      width: 100%;
+      justify-content: space-between;
+      
+      > div {
+        min-width: auto !important;
+        text-align: left !important;
+      }
+    }
+  }
 `;
 
 export const ProductName = styled.div`
@@ -67,6 +223,18 @@ export const ProductName = styled.div`
   font-weight: 500;
   flex: 1;
   margin-right: 15px;
+  
+  @media (max-width: 1023px) {
+    font-size: 13px;
+    margin-right: 12px;
+  }
+  
+  @media (max-width: 767px) {
+    font-size: 14px;
+    margin-right: 0;
+    margin-bottom: 8px;
+    width: 100%;
+  }
 `;
 
 export const ProductPrice = styled.div`
@@ -74,10 +242,76 @@ export const ProductPrice = styled.div`
   color: #4a90e2;
 `;
 
+export const ProductPriceText = styled.div`
+  min-width: 100px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  
+  @media (max-width: 1023px) {
+    min-width: 80px;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    min-width: auto;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+  }
+`;
+
+export const QuantityContainer = styled.div`
+  min-width: 100px;
+  display: flex;
+  justify-content: center;
+  
+  @media (max-width: 1023px) {
+    min-width: 80px;
+  }
+  
+  @media (max-width: 767px) {
+    min-width: auto;
+    justify-content: flex-start;
+  }
+`;
+
+export const ProductTotalContainer = styled.div`
+  min-width: 100px;
+  text-align: center;
+  font-size: 14px;
+  color: #ff4757;
+  font-weight: 500;
+  
+  @media (max-width: 1023px) {
+    min-width: 80px;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    min-width: auto;
+    text-align: left;
+    font-size: 14px;
+  }
+`;
+
 export const ColumnHeader = styled.div`
   font-size: 12px;
   color: #666;
   font-weight: 500;
+  min-width: 100px;
+  text-align: center;
+  
+  @media (max-width: 1023px) {
+    min-width: 80px;
+    font-size: 11px;
+  }
+  
+  @media (max-width: 767px) {
+    min-width: auto;
+    font-size: 12px;
+    text-align: left;
+  }
 `;
 
 export const QuantityControls = styled.div`
@@ -121,7 +355,6 @@ export const QuantityInput = styled.input`
   border-right: 1px solid #e0e0e0;
   background: white;
   
-  /* Remove spinner arrows */
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -160,7 +393,18 @@ export const SummarySection = styled.div`
   width: 300px;
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  width:30%
+  width: 30%;
+  
+  @media (max-width: 1023px) {
+    width: 85%;
+    padding: 16px;
+  }
+  
+  @media (max-width: 767px) {
+    width: 80%;
+    padding: 15px;
+    margin-top: 20px;
+  }
 `;
 
 export const SummaryRow = styled.div`
@@ -172,29 +416,111 @@ export const SummaryRow = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+  
+  @media (max-width: 1023px) {
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 767px) {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+`;
+
+export const AddressSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  
+  @media (max-width: 767px) {
+    gap: 5px;
+  }
+`;
+
+export const AddressLabel = styled.span`
+  font-size: 14px;
+  
+  @media (max-width: 1023px) {
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    font-size: 14px;
+  }
+`;
+
+export const AddressText = styled.span`
+  font-size: 14px;
+  margin-left: 5px;
+  font-weight: bold;
+  
+  @media (max-width: 1023px) {
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    font-size: 14px;
+    margin-left: 0;
+    word-break: break-word;
+  }
+`;
+
+export const AddressChangeButton = styled.span`
+  font-size: 14px;
+  margin-left: 10px;
+  color: blue;
+  cursor: pointer;
+  
+  @media (max-width: 1023px) {
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    font-size: 14px;
+    margin-left: 0;
+    margin-top: 5px;
+  }
 `;
 
 export const SummaryLabel = styled.div`
   font-size: 14px;
   color: #666;
+  
+  @media (max-width: 1023px) {
+    font-size: 13px;
+  }
 `;
 
 export const SummaryValue = styled.div`
   font-size: 14px;
   color: #333;
   font-weight: 500;
+  
+  @media (max-width: 1023px) {
+    font-size: 13px;
+  }
 `;
 
 export const TotalSection = styled.div`
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #eee;
+  
+  @media (max-width: 1023px) {
+    margin-top: 15px;
+    padding-top: 15px;
+  }
 `;
 
 export const TotalLabel = styled.div`
   font-size: 14px;
   color: #666;
   margin-bottom: 8px;
+  
+  @media (max-width: 1023px) {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
 `;
 
 export const TotalAmount = styled.div`
@@ -202,6 +528,14 @@ export const TotalAmount = styled.div`
   color: #ff4757;
   font-weight: 600;
   margin-bottom: 5px;
+  
+  @media (max-width: 1023px) {
+    font-size: 18px;
+  }
+  
+  @media (max-width: 767px) {
+    font-size: 18px;
+  }
 `;
 
 export const TaxNote = styled.div`
@@ -229,10 +563,21 @@ export const CheckoutButtonSuccess = styled.button`
   &:active {
     background: #e63946;
   }
+  
+  @media (max-width: 1023px) {
+    padding: 10px 0;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    padding: 14px 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
 `;
 
 export const CheckoutButtonFail = styled.button`
-  background:rgba(97, 92, 93, 0.33);
+  background: rgba(97, 92, 93, 0.33);
   color: white;
   border: none;
   padding: 12px 0;
@@ -250,4 +595,41 @@ export const CheckoutButtonFail = styled.button`
   &:active {
     background: rgba(97, 92, 93, 0.33);
   }
+  
+  @media (max-width: 1023px) {
+    padding: 10px 0;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 767px) {
+    padding: 14px 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+`;
+
+export const ModalForm = styled(Form)`
+  max-width: 600px;
+  
+  @media (max-width: 767px) {
+    max-width: 100%;
+    
+    .ant-form-item-label {
+      text-align: left;
+    }
+    
+    .ant-col-4 {
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+    
+    .ant-col-20 {
+      flex: 0 0 75%;
+      max-width: 75%;
+    }
+  }
+`;;
+
+export const ModalFormItem = styled(Form.Item)`
+ 
 `;

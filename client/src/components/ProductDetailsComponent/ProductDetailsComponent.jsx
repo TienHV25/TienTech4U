@@ -14,7 +14,18 @@ import {
   WrapperStyleColImage,
   WrapperStyledNameProduct,
   WrapperStyledTextProduct,
-  WrapperStyleImageSmall
+  WrapperStyleImageSmall,
+  WrapperMainColImage,
+  WrapperRowImages,
+  WrapperHighlightContainer,
+  WrapperQuantityContainer,
+  WrapperProductPriceSymbol,
+  WrapperBottomSpacing,
+  WrapperRowAddress,
+  WrapperColAddress,
+  WrapperColChangeAddress,
+  WrapperButtonGroup,
+  StyledImageMain
 } from './style'
 import checkLogo from '../../assets/images/checked.png'
 import { StarFilled } from '@ant-design/icons'
@@ -145,123 +156,94 @@ const ProductDetailsComponent = ({ idProduct }) => {
     },
     }}/>
     <Row>
-      <Col span={10} style={{ padding: '16px', backgroundColor: '#fff' }}>
-        <Image
+      <WrapperMainColImage xs={24} sm={24} md={10} lg={10} xl={10}>
+        <StyledImageMain
           src={detaiProduct?.image}
           alt="Image Product Details"
           preview={false}
-          style={{ border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: '5px' }}
         />
 
-        <Row style={{ paddingTop: '10px', justifyContent: 'space-between', backgroundColor: '#fff' }}>
-          {images.map((src, index) => (
-            <WrapperStyleColImage key={index} span={4}>
-              <WrapperStyleImageSmall
-                src={src}
-                alt="Image Product Details Small"
-                preview={true}
-                $isSelected={selectedImageIndex === index}
-                onClick={() => handleClick(index)}
-                style={{ width: '80px' }}
-              />
-            </WrapperStyleColImage>
-          ))}
-          <div style={{ padding: '10px' }}>
-            <WrapperInforProduct>Đặc điểm nổi bật</WrapperInforProduct>
-            <div style={{ marginTop: '10px' }}>
-              <Image src={checkLogo} alt="check logo" preview={false} style={{ height: '16px' }} />
-              <WrapperInforProductSmall style={{ marginLeft: '5px' }}>
-                {detaiProduct?.description}
-              </WrapperInforProductSmall>
-            </div>
-          </div>
-        </Row>
-      </Col>
-
-      <Col span={14} style={{ padding: '16px', backgroundColor: '#fff' }}>
-        <WrapperStyledNameProduct>{detaiProduct?.name}</WrapperStyledNameProduct>
-        <div>
-          <WrapperStyledTextProduct>{detaiProduct?.rating}</WrapperStyledTextProduct>
-          {[...Array(Math.round(detaiProduct?.rating || 0))].map((_, index) => (
-            <StarFilled
-              key={index}
-              style={{ fontSize: '12px', color: 'rgb(253,216,54)', marginLeft: '5px' }}
+      <WrapperRowImages>
+        {images.map((src, index) => (
+          <WrapperStyleColImage key={index} xs={4} sm={4} md={4} lg={4} xl={4}>
+            <WrapperStyleImageSmall
+              src={src}
+              alt="Image Product Details Small"
+              preview={true}
+              $isSelected={selectedImageIndex === index}
+              onClick={() => handleClick(index)}
             />
-          ))}
-          <WrapperStyledTextProduct>({detaiProduct?.countInStock})</WrapperStyledTextProduct>
-          <WrapperStyledTextProduct>| Đã bán 1000+</WrapperStyledTextProduct>
-        </div>
-        <WrapperPriceProduct>
-          <WrapperPriceTextProduct>
-            {(detaiProduct?.price * quantity)?.toLocaleString('vi-VN')}
-            <span
-              style={{
-                fontSize: '80%',
-                lineHeight: '0.6',
-                position: 'relative',
-                verticalAlign: 'baseline'
-              }}
-            >
-              ₫
-            </span>
-          </WrapperPriceTextProduct>
-        </WrapperPriceProduct>
-        <div>
-          <WrapperAddresTittleProduct>Thông tin vận chuyển</WrapperAddresTittleProduct>
-        </div>
-        <div>
-          <Row>
-            <Col span={20}>
-              <WrapperAdressProduct> Giao đến {user?.address ?  user?.address : 'Q. 1, P. Bến Nghé, Hồ Chí Minh'}</WrapperAdressProduct>
-            </Col>
-            <Col span={4}>
-              <WrapperChangeAdress onClick={() => handleChangeAddress()}>Đổi địa chỉ</WrapperChangeAdress>
-            </Col>
-          </Row>
-        </div>
-        <WrapperNumberOfProduct>Số Lượng</WrapperNumberOfProduct>
-        <div>
-          <WrapperButton onClick={decreaseQuantity}>-</WrapperButton>
-          <WrapperNumButton>{quantity}</WrapperNumButton>
-          <WrapperButton onClick={increaseQuantity}>+</WrapperButton>
-        </div>
-        <div style={{ marginTop: '20px', display: 'flex' }}>
-          <ButtonComponent
-            size={40}
-            styleButton={{
-              background: 'rgb(255, 66, 78)',
-              borderRadius: '4px',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: '500',
-              color: 'rgb(255, 255, 255)',
-              height: '40px',
-              width: '300px',
-              fontSize: '16px'
-            }}
-            textButton={'Chọn Mua'}
-            onClick={handleAddOrderProduct}
-          ></ButtonComponent>
+          </WrapperStyleColImage>
+        ))}
+        <WrapperHighlightContainer>
+          <WrapperInforProduct>Đặc điểm nổi bật</WrapperInforProduct>
+          <WrapperBottomSpacing>
+            <Image src={checkLogo} alt="check logo" preview={false} style={{ height: '20px',width:'20px' }} />
+            <WrapperInforProductSmall>
+              {detaiProduct?.description}
+            </WrapperInforProductSmall>
+          </WrapperBottomSpacing>
+        </WrapperHighlightContainer>
+      </WrapperRowImages>
+  </WrapperMainColImage>
 
-          <ButtonComponent
-            size={40}
-            styleButton={{
-              background: 'rgb(255, 255, 255)',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: '500',
-              color: 'rgb(10, 104, 255)',
-              height: '40px',
-              width: '300px',
-              fontSize: '16px',
-              border: '1px solid',
-              marginLeft: '20px'
-            }}
-            textButton={'Mua Trước Trả Sau'}
-          ></ButtonComponent>
-        </div>
-      </Col>
-    </Row>
+  <Col xs={24} sm={24} md={14} lg={14} xl={14} style={{ padding: '16px', backgroundColor: '#fff' }}>
+    <WrapperStyledNameProduct>{detaiProduct?.name}</WrapperStyledNameProduct>
+    <div>
+      <WrapperStyledTextProduct>{detaiProduct?.rating}</WrapperStyledTextProduct>
+      {[...Array(Math.round(detaiProduct?.rating || 0))].map((_, index) => (
+        <StarFilled
+          key={index}
+          style={{ fontSize: '12px', color: 'rgb(253,216,54)', marginLeft: '5px' }}
+        />
+      ))}
+      <WrapperStyledTextProduct>({detaiProduct?.countInStock})</WrapperStyledTextProduct>
+      <WrapperStyledTextProduct>|Đã bán ({detaiProduct?.selled})+</WrapperStyledTextProduct>
+    </div>
+    <WrapperPriceProduct>
+      <WrapperPriceTextProduct>
+        {(detaiProduct?.price * quantity)?.toLocaleString('vi-VN')}
+        <WrapperProductPriceSymbol>₫</WrapperProductPriceSymbol>
+      </WrapperPriceTextProduct>
+    </WrapperPriceProduct>
+    <div>
+      <WrapperAddresTittleProduct>Thông tin vận chuyển</WrapperAddresTittleProduct>
+    </div>
+    <WrapperRowAddress>
+      <WrapperColAddress xs={24} sm={24} md={20} lg={20} xl={20}>
+        <WrapperAdressProduct> Giao đến {user?.address ?  user?.address : 'Q. 1, P. Bến Nghé, Hồ Chí Minh'}</WrapperAdressProduct>
+      </WrapperColAddress>
+      <WrapperColChangeAddress xs={24} sm={24} md={10} lg={10} xl={10}>
+        <WrapperChangeAdress onClick={() => handleChangeAddress()}>Đổi địa chỉ</WrapperChangeAdress>
+      </WrapperColChangeAddress>
+    </WrapperRowAddress>
+    <WrapperNumberOfProduct>Số Lượng</WrapperNumberOfProduct>
+    <WrapperQuantityContainer>
+      <WrapperButton onClick={decreaseQuantity}>-</WrapperButton>
+      <WrapperNumButton>{quantity}</WrapperNumButton>
+      <WrapperButton onClick={increaseQuantity}>+</WrapperButton>
+    </WrapperQuantityContainer>
+    <WrapperButtonGroup>
+      <ButtonComponent
+        size={40}
+        styleButton={{
+          background: 'rgb(255, 66, 78)',
+          borderRadius: '4px',
+          border: 'none',
+          cursor: 'pointer',
+          fontWeight: '500',
+          color: 'rgb(255, 255, 255)',
+          height: '40px',
+          width: '50%',
+          fontSize: '16px'
+        }}
+        textButton={'Chọn Mua'}
+        onClick={handleAddOrderProduct}
+      ></ButtonComponent>
+
+    </WrapperButtonGroup>
+  </Col>
+</Row>
      <Modal title="Cập nhật thông tin người dùng"  open={isModalOpen} onCancel={handleCancel}  okButtonProps={{ style: { display: 'none' } }}>
                      <Form
                         name="basic"

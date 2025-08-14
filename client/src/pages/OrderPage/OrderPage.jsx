@@ -32,7 +32,22 @@ import {
   TaxNote,
   CheckoutButtonSuccess,
   CheckoutButtonFail,
-  ColumnHeader
+  ColumnHeader,
+  SelectAllContainer,
+  SelectAllCheckbox,
+  SelectAllText,
+  SelectAllActions,
+  ProductCheckbox,
+  ProductImageContainer,
+  ProductPriceText,
+  QuantityContainer,
+  ProductTotalContainer,
+  AddressSection,
+  AddressLabel,
+  AddressText,
+  AddressChangeButton,
+  ModalForm,
+  ModalFormItem
 } from './style';
 import { useNavigate } from 'react-router-dom';
 import ShippingPriceSteps from '../../components/ShippingPriceSteps/ShippingPriceSteps';
@@ -206,55 +221,46 @@ const OrderPage = () => {
       
       <MainContent>
         <ProductSection>
-          <div style={{ display:'flex',background:'white',borderRadius:'8px',marginBottom:'20px',
-            padding:'10px',alignItems: 'center', fontSize: '14px', color: '#666'  }}>
-            <div style={{ width: '200px', display: 'flex', alignItems: 'center' }}>
+          <SelectAllContainer>
+            <SelectAllCheckbox>
               <input 
                 type="checkbox" 
                 checked={selectedItems.length === order.orderItems.length}
                 onChange={handleSelectAll}
-                style={{ width: '16px', height: '16px', marginRight: '8px' }}
               />
-              Tất cả ({countProduct} sản phẩm)
-            </div>
-            <div style={{ flex: 1, marginRight: '15px' }}></div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
-              <ColumnHeader style={{ minWidth: '100px', textAlign: 'center', color: '#666', fontSize: '12px' }}>
-                Đơn giá
-              </ColumnHeader>
-              <ColumnHeader style={{ minWidth: '100px', textAlign: 'center', color: '#666', fontSize: '12px' }}>
-                Số lượng
-              </ColumnHeader>
-              <ColumnHeader style={{ minWidth: '100px', textAlign: 'center', color: '#666', fontSize: '12px' }}>
-                Thành tiền
-              </ColumnHeader>
-              <div style={{ width: '30px' }}><DeleteIcon onClick={() => handleDeleteProductOrderAll(selectedItems)}><i className="fas fa-trash"></i></DeleteIcon></div>
-            </div>
-          </div>
+              <SelectAllText>Tất cả ({countProduct} sản phẩm)</SelectAllText>
+            </SelectAllCheckbox>
+            <SelectAllActions>
+              <ColumnHeader>Đơn giá</ColumnHeader>
+              <ColumnHeader>Số lượng</ColumnHeader>
+              <ColumnHeader>Thành tiền</ColumnHeader>
+              <DeleteIcon onClick={() => handleDeleteProductOrderAll(selectedItems)}>
+                <i className="fas fa-trash"></i>
+              </DeleteIcon>
+            </SelectAllActions>
+          </SelectAllContainer>
           {order && order?.orderItems.map((item, index) => (
             <ProductRow key={index}>
-               <input 
+               <ProductCheckbox 
                 type="checkbox" 
                 checked={selectedItems.includes(item?.product)} 
                 onChange={() => handleSelectItem(item?.product)}
-                style={{ width: '16px', height: '16px', marginRight: '8px' }}
               />
               <ProductImage>
-                <img 
+                <ProductImageContainer 
                   src={item?.image || "/api/placeholder/80/80"} 
                   alt="Product" 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
                 />
               </ProductImage>
               
               <ProductInfo>
                 <ProductName>{item?.name}</ProductName>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
-                  <div style={{ minWidth: '100px', textAlign: 'center', fontSize: '14px', color: '#333' }}>
+                  <ProductPriceText>
                     {item?.price?.toLocaleString('vi-VN')} đ
-                  </div>
+                  </ProductPriceText>
                   
-                  <div style={{ minWidth: '100px', display: 'flex', justifyContent: 'center' }}>
+                  <QuantityContainer>
                     <QuantityControls>
                       <QuantityButton onClick={() => decreaseQuantity(item?.product, item?.amount)}>-</QuantityButton>
                       <QuantityInput 
@@ -264,13 +270,15 @@ const OrderPage = () => {
                       />
                       <QuantityButton onClick={() => increaseQuantity(item?.product, item?.amount)}>+</QuantityButton>
                     </QuantityControls>
-                  </div>
+                  </QuantityContainer>
 
-                  <ProductTotal style={{ minWidth: '100px', textAlign: 'center' }}>
+                  <ProductTotalContainer>
                      {(item?.amount * item?.price)?.toLocaleString('vi-VN')} đ
-                  </ProductTotal>
+                  </ProductTotalContainer>
 
-                  <DeleteIcon onClick={() => handleDeleteProductOrder(item?.product)}><i className="fas fa-trash"></i></DeleteIcon>
+                  <DeleteIcon onClick={() => handleDeleteProductOrder(item?.product)}>
+                    <i className="fas fa-trash"></i>
+                  </DeleteIcon>
                 </div>
               </ProductInfo>
             </ProductRow>
@@ -283,17 +291,16 @@ const OrderPage = () => {
             selectedItems={selectedItems}
           />
           
-           <SummaryRow style={{display:'flex',flexDirection:'column'}}> 
-            <div>
-              <span style={{fontSize:'14px'}}>Địa chỉ giao hàng:</span>
-            </div>
-            <div>
-              <span style={{fontSize:'14px',marginLeft:'5px',fontWeight:'bold'}}>{user?.address}</span>
-           </div>
-            <div>
-              <span onClick={() => handleChangeAddress()} style={{fontSize:'14px',marginLeft:'10px',color:'blue',cursor:'pointer'}}>Thay đổi</span>
-            </div>
-           </SummaryRow>
+          <SummaryRow>
+            <AddressSection>
+              <AddressLabel>Địa chỉ giao hàng:</AddressLabel>
+              <AddressText>{user?.address}</AddressText>
+              <AddressChangeButton onClick={() => handleChangeAddress()}>
+                Thay đổi
+              </AddressChangeButton>
+            </AddressSection>
+          </SummaryRow>
+          
           <SummaryRow>
             <SummaryLabel>Tạm tính</SummaryLabel>
             <SummaryValue>{totalPrice.toLocaleString('vi-VN')} đ</SummaryValue>
@@ -319,7 +326,7 @@ const OrderPage = () => {
           </TotalSection>
         </SummarySection>
         <Modal title="Cập nhật thông tin người dùng"  open={isModalOpen} onCancel={handleCancel}  okButtonProps={{ style: { display: 'none' } }}>
-                 <Form
+                 <ModalForm
                     name="basic"
                     labelCol={{
                       span: 4,
@@ -327,14 +334,11 @@ const OrderPage = () => {
                     wrapperCol={{
                       span: 20,
                     }}
-                    style={{
-                      maxWidth: 600,
-                    }}
                     onFinish={onFinish}
                     form={form}
                     autoComplete="off"
                   >   
-                      <Form.Item
+                      <ModalFormItem
                         label="Email"
                         name="email"
                         rules={[
@@ -345,9 +349,9 @@ const OrderPage = () => {
                         ]}
                       >
                         <Input />
-                      </Form.Item>
+                      </ModalFormItem>
 
-                      <Form.Item
+                      <ModalFormItem
                         label="Họ Tên"
                         name="name"
                         rules={[
@@ -358,9 +362,9 @@ const OrderPage = () => {
                         ]}
                       >
                         <Input />
-                      </Form.Item>
+                      </ModalFormItem>
           
-                      <Form.Item
+                      <ModalFormItem
                         label="SĐT"
                         name="phone"
                         rules={[
@@ -371,9 +375,9 @@ const OrderPage = () => {
                         ]}
                       >
                         <Input  />
-                      </Form.Item>
+                      </ModalFormItem>
           
-                      <Form.Item
+                      <ModalFormItem
                         label="Địa Chỉ"
                         name="address"
                         rules={[
@@ -384,14 +388,14 @@ const OrderPage = () => {
                         ]}
                       >
                         <Input  />
-                      </Form.Item>
+                      </ModalFormItem>
 
                       <Form.Item label={null}>
                         <Button type="primary" htmlType="submit">
                           Submit
                         </Button>
                       </Form.Item>
-                    </Form>
+                    </ModalForm>
         </Modal>
       </MainContent>
     </Container>

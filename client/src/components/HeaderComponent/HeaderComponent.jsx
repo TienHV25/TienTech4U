@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import {Badge, Col,Input, Popover} from 'antd'
-import { WrapperHeader, WrapperTextHeader,WrapperAccountHeader, WrapperTextHeaderSmall,
-   WrapperContentPopUp, WrapperTextHeaderSmallLogin, WrapperIconText} from './style'
-import {UserOutlined,CaretDownOutlined,ShoppingCartOutlined,HomeOutlined} from '@ant-design/icons';
+import { Badge, Col, Input, Popover } from 'antd'
+import {
+  WrapperHeader,
+  WrapperTextHeader,
+  WrapperAccountHeader,
+  WrapperTextHeaderSmall,
+  WrapperContentPopUp,
+  WrapperTextHeaderSmallLogin,
+  WrapperIconText,
+  WrapperLogoText,
+  WrapperCol8,
+  AvatarImage,
+  HomeIcon,
+  CartIcon,
+  ChevronDownIcon
+} from './style'
+import { UserOutlined, CaretDownOutlined, ShoppingCartOutlined, HomeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import * as UserService from '../../services/UserService'
 import { resetUser } from '../../redux/slides/userSlide'
-import {useDispatch} from "react-redux"
+import { useDispatch } from "react-redux"
 import LoadingComponent from '../LoadingComponent/LoadingComponent'
-import {searchProduct} from "../../redux/slides/productSlide"
-
-
+import { searchProduct } from "../../redux/slides/productSlide"
 
 const { Search } = Input;
 
@@ -19,25 +30,26 @@ const HeaderComponent = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const user = useSelector((state) => state.user)
-  const [loading,setLoading ] = useState(false)
-  const [userAvatar,setUserAvatar] = useState('')
-  const [search,setSearch] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [userAvatar, setUserAvatar] = useState('')
+  const [search, setSearch] = useState('')
   const resetSearchProduct = useSelector((state) => state.product.search)
   const order = useSelector((state) => state.order)
+
   const handleNavigateLogin = () => {
-      navigate('/sign-in')
+    navigate('/sign-in')
   }
 
   const handleNavigateUserProfile = () => {
-      navigate('/user-profile')
+    navigate('/user-profile')
   }
 
   const handleNavigateSystemAdmin = () => {
-      navigate('/system/admin')
+    navigate('/system/admin')
   }
 
   const handleNavigateUserOrder = () => {
-      navigate('/user-order')
+    navigate('/user-order')
   }
 
   const handleLogout = async () => {
@@ -49,113 +61,94 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     setUserAvatar(user?.avatar)
-  },[user?.avatar])
+  }, [user?.avatar])
 
   useEffect(() => {
-  if (resetSearchProduct === '') {
-    setSearch('');
-  }
+    if (resetSearchProduct === '') {
+      setSearch('');
+    }
   }, [resetSearchProduct])
 
-  const content = ( 
+  const content = (
     <div>
       <WrapperContentPopUp onClick={handleLogout}>Đăng Xuất</WrapperContentPopUp>
       <WrapperContentPopUp onClick={handleNavigateUserProfile}>Thông tin người dùng</WrapperContentPopUp>
       <WrapperContentPopUp onClick={handleNavigateUserOrder}>Đơn hàng của tôi</WrapperContentPopUp>
       {user?.isAdmin && (
-      <WrapperContentPopUp onClick={handleNavigateSystemAdmin}>Quản lý hệ thống</WrapperContentPopUp>
-      )
-      }
+        <WrapperContentPopUp onClick={handleNavigateSystemAdmin}>Quản lý hệ thống</WrapperContentPopUp>
+      )}
     </div>
   )
+
   const handleNavigateHome = () => {
     navigate('/')
   }
-  const onSearch = (e) =>{
+
+  const onSearch = (e) => {
     setSearch(e.target.value)
     dispatch(searchProduct(e.target.value))
   }
+
   return (
-     <WrapperHeader>
-       <Col span={4}>
-         <WrapperTextHeader onClick={handleNavigateHome}>
-           <span style={{cursor: 'pointer'}}>Tiến Tech4U</span>
-         </WrapperTextHeader>
-       </Col>
-       <Col span={12} >
-         <Search
+    <WrapperHeader>
+      <Col span={4}>
+        <WrapperTextHeader onClick={handleNavigateHome}>
+          <WrapperLogoText>Tiến Tech4U</WrapperLogoText>
+        </WrapperTextHeader>
+      </Col>
+      <Col span={12}>
+        <Search
           placeholder="Nhập thông tin cần tìm"
           allowClear
           value={search}
           size="large"
           onChange={onSearch}
-         />
-       </Col>
-       <Col span={8} style={{display:'flex',gap:'20px'}}>
+        />
+      </Col>
+      <WrapperCol8 span={8}>
         <WrapperAccountHeader>
-         <WrapperIconText>
-           <HomeOutlined style={{fontSize:'23px'}} />
-           <WrapperTextHeaderSmall style={{cursor:'pointer'}} onClick={handleNavigateHome}>Trang Chủ</WrapperTextHeaderSmall>
-         </WrapperIconText>
-         <WrapperIconText>
-          {userAvatar ? (
-            <img src={userAvatar} style={{
-              height:'32px',
-              width:'32px',
-              borderRadius:'50%',
-              objectFit:'cover'
-           }}
-             alt='avatar'/> 
-          ) : 
-          (
-            <UserOutlined style={{fontSize:'20px',marginLeft:'15px'}} /> 
-          )}
-          <LoadingComponent isPending={loading}>
-            {user?.name ? (
-              <>
-                <div style={{cursor:'pointer'}}>
-                <Popover content={content} trigger="click" overlayStyle={{ width: '170px', height: '10px' }}>
-                  <WrapperTextHeaderSmallLogin>
+          <WrapperIconText>
+            <HomeIcon />
+            <WrapperTextHeaderSmall onClick={handleNavigateHome}>Trang Chủ</WrapperTextHeaderSmall>
+          </WrapperIconText>
+          <WrapperIconText>
+            {userAvatar ? (
+              <AvatarImage src={userAvatar} alt='avatar' />
+            ) : (
+              <UserOutlined style={{ fontSize: '20px', marginLeft: '15px' }} />
+            )}
+            <LoadingComponent isPending={loading}>
+              {user?.name ? (
+                <div>
+                  <Popover content={content} trigger="click" overlayStyle={{ width: '170px', height: '10px' }}>
+                    <WrapperTextHeaderSmallLogin>
                       <span>Xin Chào {user?.name}</span>
-                      <i className="fas fa-chevron-down"></i>
-                  </WrapperTextHeaderSmallLogin>
-                </Popover>
+                      <ChevronDownIcon />
+                    </WrapperTextHeaderSmallLogin>
+                  </Popover>
                 </div>
-              </>
-            ) : (      
-              <div onClick={handleNavigateLogin} style={{cursor:'pointer'}}>
+              ) : (
+                <div onClick={handleNavigateLogin}>
                   <WrapperTextHeaderSmallLogin>
                     Đăng Nhập/Đăng Ký
                   </WrapperTextHeaderSmallLogin>
-                <div>
                   <WrapperTextHeaderSmallLogin>
                     Tài Khoản
                     <CaretDownOutlined />
                   </WrapperTextHeaderSmallLogin>
-                </div>           
-              </div>
-            )
-            }
-          </LoadingComponent>
-         </WrapperIconText>
-         {user?.id ?
-         <WrapperIconText onClick={() => navigate('/order')} style={{cursor:'pointer'}}>
+                </div>
+              )}
+            </LoadingComponent>
+          </WrapperIconText>
+          <WrapperIconText onClick={() => navigate(user?.id ? '/order' : '/sign-in')}>
             <Badge count={order?.orderItems?.length} size='small'>
-               <ShoppingCartOutlined style={{fontSize:'23px',color:'#fff',marginLeft:'20px'}} />
+              <CartIcon />
             </Badge>
             <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
-         </WrapperIconText>
-         : 
-         <WrapperIconText onClick={() =>  navigate('/sign-in')} style={{cursor:'pointer'}}>
-            <Badge count={order?.orderItems?.length} size='small'>
-               <ShoppingCartOutlined style={{fontSize:'23px',color:'#fff',marginLeft:'20px'}} />
-            </Badge>
-            <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
-         </WrapperIconText>
-         }
-         </WrapperAccountHeader>
-       </Col>
-     </WrapperHeader>
+          </WrapperIconText>
+        </WrapperAccountHeader>
+      </WrapperCol8>
+    </WrapperHeader>
   )
 }
 

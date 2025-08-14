@@ -7,6 +7,14 @@ export const Container = styled.div`
   background-color: #f8f9fa;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
+
+  @media (max-width: 1023px) {
+    padding: 15px;
+  }
+
+  @media (max-width: 767px) {
+    padding: 10px;
+  }
 `;
 
 export const Header = styled.h1`
@@ -15,18 +23,37 @@ export const Header = styled.h1`
   margin-bottom: 20px;
   color: #333;
   padding: 5px 0;
+
+  @media (max-width: 767px) {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
 `;
 
 export const MainContent = styled.div`
   display: flex;
   gap: 80px;
   align-items: flex-start;
+
+  @media (max-width: 1023px) {
+    gap: 40px;
+  }
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 20px;
+  }
 `;
 
 export const ProductSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex: 1;
+
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 `;
 
 export const SectionBox = styled.div`
@@ -35,11 +62,20 @@ export const SectionBox = styled.div`
   padding: 15px;
   border: 1px solid #ddd;
   margin-bottom: 20px;
+
+  @media (max-width: 767px) {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
 `;
 
 export const SectionTitle = styled.h4`
   font-size: 14px;
   margin-bottom: 10px;
+
+  @media (max-width: 767px) {
+    font-size: 13px;
+  }
 `;
 
 export const OptionBox = styled.div`
@@ -50,6 +86,10 @@ export const OptionBox = styled.div`
   margin-bottom: ${(props) => (props.$last ? '0' : '10px')};
   display: flex;
   align-items: center;
+
+  @media (max-width: 767px) {
+    padding: 10px;
+  }
 `;
 
 export const Radio = styled.input`
@@ -60,13 +100,20 @@ export const OptionLabel = styled.span`
   font-weight: 600;
   margin-right: 6px;
   color: ${props => props.type === 'fast' ? '#1890ff' : props.type === 'gojek' ? '#fa541c' : '#333'};
+
+  @media (max-width: 767px) {
+    font-size: 13px;
+  }
 `;
 
 export const OptionText = styled.span`
   font-weight: 400;
   color: #333;
-`;
 
+  @media (max-width: 767px) {
+    font-size: 13px;
+  }
+`;
 
 export const ProductRow = styled.div`
   display: flex;
@@ -79,6 +126,11 @@ export const ProductRow = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+
+  @media (max-width: 767px) {
+    padding: 8px;
+    margin-bottom: 12px;
+  }
 `;
 
 export const ProductImage = styled.div`
@@ -89,6 +141,12 @@ export const ProductImage = styled.div`
   overflow: hidden;
   flex-shrink: 0;
   margin-right: 15px;
+
+  @media (max-width: 767px) {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+  }
 `;
 
 export const ProductInfo = styled.div`
@@ -96,6 +154,12 @@ export const ProductInfo = styled.div`
   align-items: center;
   flex: 1;
   justify-content: space-between;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 `;
 
 export const ProductName = styled.div`
@@ -105,17 +169,31 @@ export const ProductName = styled.div`
   font-weight: 500;
   flex: 1;
   margin-right: 15px;
+
+  @media (max-width: 767px) {
+    font-size: 13px;
+    margin-right: 0;
+    margin-bottom: 3px;
+  }
 `;
 
 export const ProductPrice = styled.div`
   font-size: 13px;
   color: #4a90e2;
+
+  @media (max-width: 767px) {
+    font-size: 12px;
+  }
 `;
 
 export const ColumnHeader = styled.div`
   font-size: 12px;
   color: #666;
   font-weight: 500;
+
+  @media (max-width: 767px) {
+    font-size: 11px;
+  }
 `;
 
 export const QuantityControls = styled.div`
@@ -125,6 +203,10 @@ export const QuantityControls = styled.div`
   border-radius: 4px;
   overflow: hidden;
   background: white;
+
+  @media (max-width: 767px) {
+    margin-top: 5px;
+  }
 `;
 
 export const QuantityButton = styled.button`
@@ -146,6 +228,12 @@ export const QuantityButton = styled.button`
   &:active {
     background: #e0e0e0;
   }
+
+  @media (max-width: 767px) {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
 `;
 
 export const QuantityInput = styled.input`
@@ -159,7 +247,6 @@ export const QuantityInput = styled.input`
   border-right: 1px solid #e0e0e0;
   background: white;
   
-  /* Remove spinner arrows */
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -169,12 +256,22 @@ export const QuantityInput = styled.input`
   &[type=number] {
     -moz-appearance: textfield;
   }
+
+  @media (max-width: 767px) {
+    width: 30px;
+    height: 24px;
+    font-size: 12px;
+  }
 `;
 
 export const ProductTotal = styled.div`
   font-size: 14px;
   color: #ff4757;
   font-weight: 500;
+
+  @media (max-width: 767px) {
+    font-size: 13px;
+  }
 `;
 
 export const DeleteIcon = styled.button`
@@ -189,6 +286,11 @@ export const DeleteIcon = styled.button`
   &:hover {
     color: #ff4757;
   }
+
+  @media (max-width: 767px) {
+    font-size: 14px;
+    width: 25px;
+  }
 `;
 
 export const SummarySection = styled.div`
@@ -198,7 +300,17 @@ export const SummarySection = styled.div`
   width: 300px;
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  width:30%
+  width: 30%;
+
+  @media (max-width: 1023px) {
+    width: 35%;
+    padding: 15px;
+  }
+
+  @media (max-width: 767px) {
+    width: 100%;
+    padding: 15px;
+  }
 `;
 
 export const SummaryRow = styled.div`
@@ -210,29 +322,50 @@ export const SummaryRow = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+
+  @media (max-width: 767px) {
+    margin-bottom: 10px;
+  }
 `;
 
 export const SummaryLabel = styled.div`
   font-size: 14px;
   color: #666;
+
+  @media (max-width: 767px) {
+    font-size: 13px;
+  }
 `;
 
 export const SummaryValue = styled.div`
   font-size: 14px;
   color: #333;
   font-weight: 500;
+
+  @media (max-width: 767px) {
+    font-size: 13px;
+  }
 `;
 
 export const TotalSection = styled.div`
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #eee;
+
+  @media (max-width: 767px) {
+    margin-top: 15px;
+    padding-top: 15px;
+  }
 `;
 
 export const TotalLabel = styled.div`
   font-size: 14px;
   color: #666;
   margin-bottom: 8px;
+
+  @media (max-width: 767px) {
+    font-size: 13px;
+  }
 `;
 
 export const TotalAmount = styled.div`
@@ -240,12 +373,21 @@ export const TotalAmount = styled.div`
   color: #ff4757;
   font-weight: 600;
   margin-bottom: 5px;
+
+  @media (max-width: 767px) {
+    font-size: 18px;
+  }
 `;
 
 export const TaxNote = styled.div`
   font-size: 11px;
   color: #999;
   margin-bottom: 20px;
+
+  @media (max-width: 767px) {
+    font-size: 10px;
+    margin-bottom: 15px;
+  }
 `;
 
 export const CheckoutButtonSuccess = styled.button`
@@ -267,6 +409,11 @@ export const CheckoutButtonSuccess = styled.button`
   &:active {
     background: #e63946;
   }
+
+  @media (max-width: 767px) {
+    padding: 10px 0;
+    font-size: 13px;
+  }
 `;
 
 export const CheckoutButtonFail = styled.button`
@@ -287,5 +434,10 @@ export const CheckoutButtonFail = styled.button`
   
   &:active {
     background: rgba(97, 92, 93, 0.33);
+  }
+
+  @media (max-width: 767px) {
+    padding: 10px 0;
+    font-size: 13px;
   }
 `;
