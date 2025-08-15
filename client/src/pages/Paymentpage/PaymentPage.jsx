@@ -1,17 +1,17 @@
-import React, { useState , useEffect } from 'react';
-import { useSelector , useDispatch } from 'react-redux'
-import { getDetailProduct } from '../../services/ProductService'
-import { toast, Toaster } from 'react-hot-toast'
-import { Button, Form, Input, message, Modal } from "antd"
-import { useMutationHook } from '../../hooks/useMutationHook'
-import * as UserService from '../../services/UserService'
-import * as OrderService from '../../services/OrderService'
-import * as PaymentService from '../../services/PaymentService'
-import { isJsonString } from '../../utils'
-import { updateUser } from '../../redux/slides/userSlide'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { PayPalButton } from "react-paypal-button-v2"
-import { orderConstant } from '../../constant'
+import React, { useState, useEffect } from 'react';
+import { useSelector , useDispatch } from 'react-redux';
+import { getDetailProduct } from '../../services/ProductService';
+import { toast, Toaster } from 'react-hot-toast';
+import { Button, Form, Input, message, Modal } from "antd";
+import { useMutationHook } from '../../hooks/useMutationHook';
+import * as UserService from '../../services/UserService';
+import * as OrderService from '../../services/OrderService';
+import * as PaymentService from '../../services/PaymentService';
+import { isJsonString } from '../../utils';
+import { updateUser } from '../../redux/slides/userSlide';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { orderConstant } from '../../constant';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import {
   Container,
   Header,
@@ -35,20 +35,34 @@ import {
 } from './style';
 
 const PaymentPage = () => {
-  const location = useLocation()
-  const selectedItems = location.state?.selectedItems 
-  const tax = location.state?.tax
-  const [isModalOpen,setIsModalOpen] = useState(false)
-  const [form] = Form.useForm()
-  const user = useSelector((state) => state.user)
-  const dispatch = useDispatch()
-  const [discountTotal, setDiscountTotal] = useState(0)
-  const [delivery,setDelivery] = useState(orderConstant.delivery.fast)
-  const [payment,setPayment] = useState(orderConstant.payment.paypal)
-  const navigate = useNavigate()
-  const [sdkReady,setSdkReady] = useState(false)
-  const [usdPrice, setUsdPrice] = useState(null)
+  const location = useLocation();
+  const selectedItems = location.state?.selectedItems;
+  const tax = location.state?.tax;
+  const [isModalOpen,setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [discountTotal, setDiscountTotal] = useState(0);
+  const [delivery,setDelivery] = useState(orderConstant.delivery.fast);
+  const [payment,setPayment] = useState(orderConstant.payment.paypal);
+  const navigate = useNavigate();
+  const [usdPrice, setUsdPrice] = useState(null);
+  const [paypalClientId, setPaypalClientId] = useState(null);
 
+  // Lấy clientId PayPal khi load trang
+  useEffect(() => {
+    const fetchClientId = async () => {
+      try {
+        const res = await PaymentService.getConfig();
+        setPaypalClientId(res.data);
+      } catch (err) {
+        console.error("Lỗi lấy PayPal clientId", err);
+      }
+    };
+    fetchClientId();
+  }, []);
+
+  // Tính giảm giá
   useEffect(() => {
     const fetchDiscounts = async () => {
       let totalDiscount = 0;
@@ -59,36 +73,16 @@ const PaymentPage = () => {
           totalDiscount += discountAmount * item.amount;
         }
       }
-      setDiscountTotal(totalDiscount)
-    }
-    fetchDiscounts()
-  }, [selectedItems])
-
-  const addPaypalScript = async () => {
-    const res = await PaymentService.getConfig() 
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.src=`https://www.paypal.com/sdk/js?client-id=${res.data}`
-    script.async = true
-    script.onload = () => {
-       setSdkReady(true)
-    }
-    document.body.appendChild(script)
-  }
-
-  useEffect(() => {
-    if(!window.paypal){
-      addPaypalScript()
-    }else{
-      setSdkReady(true)
-    }
-  },[])
+      setDiscountTotal(totalDiscount);
+    };
+    fetchDiscounts();
+  }, [selectedItems]);
 
   const addOrderMutation  = useMutationHook( 
     ({ token, data }) => OrderService.createOrder(token, data),
     {
       onSuccess: () => {
-        message.success("Đặt hàng thành công, xin quý khách hãy check email để biết chi tiết đơn hàng")
+        message.success("Đặt hàng thành công, xin quý khách hãy check email để biết chi tiết đơn hàng");
         navigate('/orderSuccess', {
           state : {
             delivery : delivery,
@@ -96,13 +90,13 @@ const PaymentPage = () => {
             selectedItems: selectedItems,
             totalPrice: finalPrice
           }
-        })
+        });
       },
       onError: (error) => {
-        message.error(error?.response?.data?.message || "Đã xảy ra lỗi")
+        message.error(error?.response?.data?.message || "Đã xảy ra lỗi");
       }
     }
-  )
+  );
 
   const handleAddOrder = () => {
     addOrderMutation.mutate({
@@ -120,14 +114,8 @@ const PaymentPage = () => {
         totalPrice: Number(finalPrice),
         user: user?.id
       }
-    })
-    console.log("check mutate",addOrderMutation)
-  }
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
-    form.resetFields()
-  }
+    });
+  };
 
   const onSuccessPaypal = (details) => {
     addOrderMutation.mutate({
@@ -147,10 +135,15 @@ const PaymentPage = () => {
         isPaid: true,
         paidAt: details.update_time
       }
-    })
-    toast.success("Thanh toán thành công, xin quý khách hãy check email để biết chi tiết đơn hàng")
-  }
-  
+    });
+    toast.success("Thanh toán thành công, xin quý khách hãy check email để biết chi tiết đơn hàng");
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    form.resetFields();
+  };
+
   const handleChangeAddress = () => {
     form.setFieldsValue({
       email: user?.email || '',
@@ -158,45 +151,45 @@ const PaymentPage = () => {
       phone: user?.phone || '',
       address: user?.address || '',
     });
-    setIsModalOpen(true)
-  }
-  
+    setIsModalOpen(true);
+  };
+
   const updateMutation = useMutationHook( 
     ({ id, token, data }) => UserService.updateUser(id, token, data),
     {
       onSuccess: (response) => {
-        message.success('Cập nhật người dùng thành công!')
-        setIsModalOpen(false)
+        message.success('Cập nhật người dùng thành công!');
+        setIsModalOpen(false);
         if (response?.data) {
-          dispatch(updateUser(response.data))
+          dispatch(updateUser(response.data));
         }
       },
       onError: () => {
-        message.error('Cập nhật thất bại!')
+        message.error('Cập nhật thất bại!');
       }
     }
-  )
-  
+  );
+
   const onFinish = (values) => {
-    let storageData= localStorage.getItem('access_token')
+    let storageData= localStorage.getItem('access_token');
     if(storageData && isJsonString(storageData) ) {
-      storageData = JSON.parse(storageData)
-      updateMutation.mutate({ id: user?.id, token: storageData, data: values})
+      storageData = JSON.parse(storageData);
+      updateMutation.mutate({ id: user?.id, token: storageData, data: values});
     }
-  }
-  
-  const totalPrice = selectedItems.reduce((sum, item) => sum + item.amount * item.price, 0)
-  const finalPrice = (totalPrice - discountTotal + tax)
+  };
+
+  const totalPrice = selectedItems.reduce((sum, item) => sum + item.amount * item.price, 0);
+  const finalPrice = (totalPrice - discountTotal + tax);
 
   useEffect(() => {
     const fetchRate = async () => {
       const converted = await PaymentService.convertVNDToUSD(finalPrice);
       setUsdPrice(converted);
     };
-    if (payment === orderConstant.payment.paypal && sdkReady) {
+    if (payment === orderConstant.payment.paypal) {
       fetchRate();
     }
-  }, [payment, sdkReady, finalPrice])
+  }, [payment, finalPrice]);
 
   return (
     <Container>
@@ -286,12 +279,24 @@ const PaymentPage = () => {
             <TotalLabel>Tổng tiền</TotalLabel>
             <TotalAmount>{finalPrice.toLocaleString('vi-VN')} đ</TotalAmount>
             <TaxNote>(đã bao gồm VAT nếu có)</TaxNote>
-            {payment === orderConstant.payment.paypal && sdkReady && usdPrice ?
-              <PayPalButton
-                amount={usdPrice}
-                onSuccess={onSuccessPaypal}
-                disabled={addOrderMutation.isPending}
-              />
+            {payment === orderConstant.payment.paypal && paypalClientId && usdPrice ?
+              <PayPalScriptProvider options={{ "client-id": paypalClientId }}>
+                <PayPalButtons
+                  style={{ layout: "vertical" }}
+                  createOrder={(data, actions) => {
+                    return actions.order.create({
+                      purchase_units: [{
+                        amount: { value: usdPrice }
+                      }]
+                    });
+                  }}
+                  onApprove={async (data, actions) => {
+                    const details = await actions.order.capture();
+                    onSuccessPaypal(details);
+                  }}
+                  disabled={addOrderMutation.isPending}
+                />
+              </PayPalScriptProvider>
               :  
               <CheckoutButtonSuccess 
                 onClick={handleAddOrder}
