@@ -37,8 +37,6 @@ const UserOrder = () => {
     enabled: !!user?.access_token && !!user?.id,
   })
  
-  console.log(data)
-
   const handleDeleteProduct = async () => {
     if (!selectedOrder?._id) {
       toast.error('Không tìm thấy đơn hàng để hủy')
@@ -46,7 +44,6 @@ const UserOrder = () => {
     }
 
     try {
-      console.log("check check",selectedOrder)
       const res = await OrderService.cancelOrder(user?.access_token,selectedOrder)
       if (res.status === 'OK') {
         toast.success('Hủy đơn hàng thành công')

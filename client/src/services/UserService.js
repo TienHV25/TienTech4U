@@ -55,13 +55,14 @@ export const getUserDetail = async (id,access_token) => {
     }
 }
 
-export const refreshToken = async () => {
+export const refreshToken = async (refreshToken) => {
     try {
         const res = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/user/refresh-token`, {},
             {
-                withCredentials: true
+              headers: {
+                token: `Bearer ${refreshToken}`
+            }
             })
-        localStorage.setItem('access_token', JSON.stringify(res.data.accessToken))
         return res.data
     } catch (error) {
         if (error.response && error.response.data) {

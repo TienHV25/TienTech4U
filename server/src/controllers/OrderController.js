@@ -83,7 +83,6 @@ const cancelOrder = async(req,res) => {
         const orderDelete =  await OrderService.cancelOrder(req.body)
         return res.status(200).json(orderDelete)
     } catch (e) {
-        console.log(e)
         return res.status(500).json({message:e})
     }
 }

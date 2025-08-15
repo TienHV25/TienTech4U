@@ -47,8 +47,6 @@ const SignUpPage = () => {
 
   const { data,isPending,isSuccess,isError } = mutation
 
-  console.log('mutation:',mutation)
-
   useEffect(() => {
     if(isSuccess && data?.status !== 'ERR')
     {
@@ -78,7 +76,6 @@ const SignUpPage = () => {
       password,
       confirmPassword
     })
-    console.log('sign-up:',email,password,confirmPassword)
   }
 
   return (

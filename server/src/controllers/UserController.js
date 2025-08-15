@@ -55,7 +55,10 @@ const loginUser = async(req,res) => {
             secure: false,  
             sameSite: 'strict',
         })
-        return res.status(200).json(newUserLog)
+        return res.status(200).json({
+            ...newUserLog,
+            refresh_token
+        })
     } catch (e) {
         return res.status(500).json({message:e})
     }
@@ -108,24 +111,19 @@ const getUserAll = async(req,res) => {
     }
 }
 
-const refreshToken = async (req, res) => { 
+const refreshToken = async (req, res) => {
     try {
-        const token = req.cookies.refresh_token
+        const token = req.headers.token?.split(' ')[1]
         if (!token) {
-            return res.status(403).json({ message: 'Token is required' });
+            return res.status(403).json({ message: 'Token is required' })
         }
 
         const user = await jwtService.verifyToken(token, process.env.REFRESH_TOKEN)
-        
-        const newAccessToken = jwtService.generalAccessToken({
-            id: user?.id,
-            isAdmin: user?.isAdmin,
-        })
+
+        const newAccessToken = jwtService.generalAccessToken({ id: user.id, email: user.email })
 
         return res.status(200).json({
-            status: 'OK',
-            message: 'Success',
-            accessToken: newAccessToken ,
+            accessToken: newAccessToken
         })
     } catch (e) {
         return res.status(401).json({ message: 'Invalid or expired token' })

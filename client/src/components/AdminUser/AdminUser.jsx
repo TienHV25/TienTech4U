@@ -135,7 +135,6 @@ const AdminUser = () => {
     const storageData = localStorage.getItem('access_token')
     if (storageData && isJsonString(storageData)) {
       const parsedStorageData = JSON.parse(storageData)
-      console.log('storageData', parsedStorageData)
       mutationDelete.mutate({ id: userToDelete, token: parsedStorageData })
       setUserToDelete(null)
     }

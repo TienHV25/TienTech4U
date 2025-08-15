@@ -140,7 +140,6 @@ const AdminProduct = () => {
 
   const onUpdateProduct = () => {
     updateMutation.mutate({ id: rowSelected, data: stateProductDetail })
-     console.log(stateProductDetail)
   }
 
   const mutationDelete = useMutationHook((id) => ProductService.deleteProduct(id))
