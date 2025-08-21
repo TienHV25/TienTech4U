@@ -8,7 +8,7 @@ const FooterComponent = () => {
     <WrapperFooter>
       <WrapperFooterText>
          &copy;2025 TienTech4U.More Information,can visit another website.
-            <a target="_blank" href='http://localhost:3000/home' rel="noopener noreferrer" style={{ color: 'white', fontWeight: 'bold' }}>
+            <a target="_blank" href='https://tien-clinic.vercel.app' rel="noopener noreferrer" style={{ color: 'white', fontWeight: 'bold' }}>
                 &#8594; Click here &#8592;
             </a>
       </WrapperFooterText>
